@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -72,7 +71,9 @@ select, input {
   min-height: 43px;
 }
 
-select:focus, input:focus { border-color: var(--green); }
+select:focus, input:focus {
+  border-color: var(--green);
+}
 
 button {
   border: 0;
@@ -83,10 +84,19 @@ button {
   transition: .2s;
 }
 
-button:disabled { opacity: .5; cursor: not-allowed; }
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
 
-.primary { background: var(--green); color: white; }
-.primary:hover { background: var(--green-dark); }
+.primary {
+  background: var(--green);
+  color: white;
+}
+
+.primary:hover {
+  background: var(--green-dark);
+}
 
 .secondary {
   background: white;
@@ -94,7 +104,10 @@ button:disabled { opacity: .5; cursor: not-allowed; }
   border: 1px solid var(--border);
 }
 
-.export { background: #e7f4ed; color: var(--green-dark); }
+.export {
+  background: #e7f4ed;
+  color: var(--green-dark);
+}
 
 .stats {
   display: grid;
@@ -111,8 +124,15 @@ button:disabled { opacity: .5; cursor: not-allowed; }
   box-shadow: 0 3px 12px #172b3a08;
 }
 
-.stat small { color: var(--muted); font-size: 13px; }
-.stat h2 { margin: 9px 0 0; font-size: 28px; }
+.stat small {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.stat h2 {
+  margin: 9px 0 0;
+  font-size: 28px;
+}
 
 .panel {
   background: white;
@@ -131,7 +151,10 @@ button:disabled { opacity: .5; cursor: not-allowed; }
   border-bottom: 1px solid var(--border);
 }
 
-.panel-head h2 { font-size: 17px; margin: 0; }
+.panel-head h2 {
+  font-size: 17px;
+  margin: 0;
+}
 
 .search-area {
   display: flex;
@@ -140,7 +163,9 @@ button:disabled { opacity: .5; cursor: not-allowed; }
   flex-wrap: wrap;
 }
 
-#search { width: min(100%, 300px); }
+#search {
+  width: min(100%, 300px);
+}
 
 .add-search-btn {
   background: var(--green);
@@ -148,9 +173,14 @@ button:disabled { opacity: .5; cursor: not-allowed; }
   white-space: nowrap;
 }
 
-.add-search-btn:hover { background: var(--green-dark); }
+.add-search-btn:hover {
+  background: var(--green-dark);
+}
 
-table { width: 100%; border-collapse: collapse; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
 th, td {
   padding: 15px 20px;
@@ -167,10 +197,19 @@ th {
   background: #fbfcfb;
 }
 
-tr:last-child td { border-bottom: 0; }
+tr:last-child td {
+  border-bottom: 0;
+}
 
-.member-name { font-weight: 600; }
-.phone { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.member-name {
+  font-weight: 600;
+}
+
+.phone {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 4px;
+}
 
 .status {
   display: inline-flex;
@@ -182,8 +221,15 @@ tr:last-child td { border-bottom: 0; }
   font-weight: 700;
 }
 
-.present { background: #e5f5eb; color: #176b50; }
-.absent { background: #f1f3f4; color: #6b7280; }
+.present {
+  background: #e5f5eb;
+  color: #176b50;
+}
+
+.absent {
+  background: #f1f3f4;
+  color: #6b7280;
+}
 
 .toggle {
   min-width: 95px;
@@ -191,8 +237,15 @@ tr:last-child td { border-bottom: 0; }
   font-size: 12px;
 }
 
-.toggle.on { background: #e5f5eb; color: #176b50; }
-.toggle.off { background: #f1f3f4; color: #6b7280; }
+.toggle.on {
+  background: #e5f5eb;
+  color: #176b50;
+}
+
+.toggle.off {
+  background: #f1f3f4;
+  color: #6b7280;
+}
 
 .progress {
   width: 100px;
@@ -208,7 +261,11 @@ tr:last-child td { border-bottom: 0; }
   background: var(--green);
 }
 
-.empty { text-align: center; padding: 35px; color: var(--muted); }
+.empty {
+  text-align: center;
+  padding: 35px;
+  color: var(--muted);
+}
 
 .footer {
   text-align: center;
@@ -231,7 +288,9 @@ tr:last-child td { border-bottom: 0; }
   max-width: calc(100% - 40px);
 }
 
-#message.error { background: #a83232; }
+#message.error {
+  background: #a83232;
+}
 
 .modal {
   display: none;
@@ -244,7 +303,9 @@ tr:last-child td { border-bottom: 0; }
   padding: 15px;
 }
 
-.modal.show { display: flex; }
+.modal.show {
+  display: flex;
+}
 
 .modal-box {
   width: 100%;
@@ -255,8 +316,14 @@ tr:last-child td { border-bottom: 0; }
   box-shadow: 0 15px 50px #0002;
 }
 
-.modal-box h2 { margin-top: 0; }
-.modal-box input { width: 100%; margin: 7px 0 12px; }
+.modal-box h2 {
+  margin-top: 0;
+}
+
+.modal-box input {
+  width: 100%;
+  margin: 7px 0 12px;
+}
 
 .modal-actions {
   display: flex;
@@ -275,7 +342,9 @@ tr:last-child td { border-bottom: 0; }
   margin: 8px 0 15px;
 }
 
-.duplicate-box.show { display: block; }
+.duplicate-box.show {
+  display: block;
+}
 
 .duplicate-title {
   font-size: 13px;
@@ -320,25 +389,125 @@ tr:last-child td { border-bottom: 0; }
   margin-top: 9px;
 }
 
+/* ATTENDANCE CHOICE */
+
+.attendance-choice {
+  margin: 5px 0 15px;
+}
+
+.attendance-choice-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.attendance-options {
+  display: flex;
+  gap: 10px;
+}
+
+.attendance-option {
+  flex: 1;
+  position: relative;
+}
+
+.attendance-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.attendance-option label {
+  display: block;
+  text-align: center;
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  background: white;
+}
+
+.attendance-option input:checked + label {
+  background: #e5f5eb;
+  border-color: var(--green);
+  color: var(--green-dark);
+}
+
+.attendance-option.absent-option input:checked + label {
+  background: #f1f3f4;
+  border-color: #9ca3af;
+  color: #4b5563;
+}
+
 @media(max-width: 760px) {
-  .stats { grid-template-columns: repeat(2, 1fr); }
-  .stat { padding: 15px; }
-  .stat h2 { font-size: 23px; }
-  .container { padding: 18px 12px 35px; }
-  .topbar { padding: 22px 16px; }
-  th, td { padding: 12px 10px; }
-  .hide-mobile { display: none; }
-  .progress { width: 65px; }
+
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stat {
+    padding: 15px;
+  }
+
+  .stat h2 {
+    font-size: 23px;
+  }
+
+  .container {
+    padding: 18px 12px 35px;
+  }
+
+  .topbar {
+    padding: 22px 16px;
+  }
+
+  th, td {
+    padding: 12px 10px;
+  }
+
+  .hide-mobile {
+    display: none;
+  }
+
+  .progress {
+    width: 65px;
+  }
 }
 
 @media(max-width: 480px) {
-  .toolbar-left, .toolbar-right { width: 100%; }
-  .toolbar-left select { flex: 1; }
-  .toolbar-right button { flex: 1; }
-  .panel-head { align-items: stretch; }
-  .search-area { width: 100%; }
-  #search { width: 100%; flex: 1; min-width: 0; }
-  .add-search-btn { padding: 12px 13px; }
+
+  .toolbar-left,
+  .toolbar-right {
+    width: 100%;
+  }
+
+  .toolbar-left select {
+    flex: 1;
+  }
+
+  .toolbar-right button {
+    flex: 1;
+  }
+
+  .panel-head {
+    align-items: stretch;
+  }
+
+  .search-area {
+    width: 100%;
+  }
+
+  #search {
+    width: 100%;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .add-search-btn {
+    padding: 12px 13px;
+  }
 }
 </style>
 </head>
@@ -353,95 +522,149 @@ tr:last-child td { border-bottom: 0; }
 <main class="container">
 
   <div class="toolbar">
+
     <div class="toolbar-left">
-      <label for="dateSelect"><strong>Sunday:</strong></label>
+
+      <label for="dateSelect">
+        <strong>Sunday:</strong>
+      </label>
+
       <select id="dateSelect"></select>
+
     </div>
 
     <div class="toolbar-right">
-      <button class="export" onclick="exportExcel()">↓ Export Excel</button>
+
+      <button
+        class="export"
+        onclick="exportExcel()"
+      >
+        ↓ Export Excel
+      </button>
+
     </div>
+
   </div>
 
+
   <section class="stats">
+
     <div class="stat">
       <small>Total Members</small>
       <h2 id="totalMembers">0</h2>
     </div>
+
     <div class="stat">
       <small>Present</small>
       <h2 id="presentCount">0</h2>
     </div>
+
     <div class="stat">
       <small>Absent</small>
       <h2 id="absentCount">0</h2>
     </div>
+
     <div class="stat">
       <small>Attendance Rate</small>
       <h2 id="attendanceRate">0%</h2>
     </div>
+
   </section>
+
 
   <section class="panel">
 
     <div class="panel-head">
+
       <h2>Attendance Register</h2>
 
       <div class="search-area">
+
         <input
           id="search"
           placeholder="Search name or phone..."
           oninput="renderTable()"
         >
 
-        <button class="add-search-btn" onclick="openModal()">
+        <button
+          class="add-search-btn"
+          onclick="openModal()"
+        >
           Add New +
         </button>
+
       </div>
+
     </div>
 
+
     <div style="overflow-x:auto">
+
       <table>
+
         <thead>
+
           <tr>
             <th>Member</th>
             <th>Status</th>
             <th class="hide-mobile">Attendance</th>
             <th>Action</th>
           </tr>
+
         </thead>
 
         <tbody id="attendanceBody">
+
           <tr>
-            <td colspan="4" class="empty">Loading attendance...</td>
+            <td colspan="4" class="empty">
+              Loading attendance...
+            </td>
           </tr>
+
         </tbody>
+
       </table>
+
     </div>
+
   </section>
 
+
   <div class="footer">
-    <span id="syncStatus">Connecting...</span>
-    · Automatically syncs every 5 seconds
+
+    <span id="syncStatus">
+      Connecting...
+    </span>
+
+    · Automatically syncs every 3 seconds
+
   </div>
 
 </main>
 
+
 <div id="message"></div>
 
-<!-- ADD MEMBER MODAL -->
+
+<!-- =====================================================
+     ADD MEMBER MODAL
+===================================================== -->
 
 <div class="modal" id="memberModal">
+
   <div class="modal-box">
 
     <h2>Add New Member</h2>
+
     <p style="color:var(--muted);font-size:13px;margin-top:-5px">
       Enter the member's details below.
     </p>
 
+
     <form id="memberForm">
 
       <label>Full name</label>
+
       <input
         id="newName"
         required
@@ -449,7 +672,9 @@ tr:last-child td { border-bottom: 0; }
         placeholder="Enter member name"
       >
 
+
       <label>Phone number</label>
+
       <input
         id="newPhone"
         required
@@ -457,18 +682,78 @@ tr:last-child td { border-bottom: 0; }
         autocomplete="off"
       >
 
+
+      <!-- ATTENDANCE CHOICE -->
+
+      <div class="attendance-choice">
+
+        <div class="attendance-choice-title">
+          Attendance for
+          <span id="attendanceDateLabel"></span>
+        </div>
+
+        <div class="attendance-options">
+
+          <div class="attendance-option">
+
+            <input
+              type="radio"
+              id="newMemberPresent"
+              name="newMemberAttendance"
+              value="present"
+              checked
+            >
+
+            <label for="newMemberPresent">
+              ✓ Present
+            </label>
+
+          </div>
+
+
+          <div class="attendance-option absent-option">
+
+            <input
+              type="radio"
+              id="newMemberAbsent"
+              name="newMemberAttendance"
+              value="absent"
+            >
+
+            <label for="newMemberAbsent">
+              Absent
+            </label>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
       <!-- DUPLICATE PHONE INFORMATION -->
 
-      <div class="duplicate-box" id="duplicateBox">
+      <div
+        class="duplicate-box"
+        id="duplicateBox"
+      >
 
         <div class="duplicate-title">
           Existing phone number found
         </div>
 
-        <div class="duplicate-name" id="duplicateName"></div>
-        <div class="duplicate-phone" id="duplicatePhone"></div>
+        <div
+          class="duplicate-name"
+          id="duplicateName"
+        ></div>
+
+        <div
+          class="duplicate-phone"
+          id="duplicatePhone"
+        ></div>
 
         <div class="duplicate-actions">
+
           <button
             type="button"
             class="mark-existing"
@@ -485,6 +770,7 @@ tr:last-child td { border-bottom: 0; }
           >
             Ignore / Cancel
           </button>
+
         </div>
 
         <div class="duplicate-warning">
@@ -493,7 +779,9 @@ tr:last-child td { border-bottom: 0; }
 
       </div>
 
+
       <div class="modal-actions">
+
         <button
           type="button"
           class="secondary"
@@ -509,16 +797,22 @@ tr:last-child td { border-bottom: 0; }
         >
           Add Member
         </button>
+
       </div>
 
     </form>
+
   </div>
+
 </div>
+
 
 <script>
 
 // PASTE YOUR DEPLOYED APPS SCRIPT WEB APP URL HERE.
-const API_URL = "https://script.google.com/macros/s/AKfycbxIfjwO470CWWSuFWQad69eetvEi6u5ryRazeVw7ll5hjUCjRKmKijpCmwSGND48wfGdQ/exec";
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbxIfjwO470CWWSuFWQad69eetvEi6u5ryRazeVw7ll5hjUCjRKmKijpCmwSGND48wfGdQ/exec";
+
 
 let members = [];
 let records = [];
@@ -527,174 +821,488 @@ let selectedDate = "";
 let busy = false;
 let duplicateMember = null;
 
+
+/* =========================================================
+   JSONP
+========================================================= */
+
 function jsonp(params) {
+
   return new Promise((resolve, reject) => {
 
-    const callbackName = "callback_" + Date.now() + "_" +
-      Math.random().toString(36).slice(2);
+    const callbackName =
+      "callback_" +
+      Date.now() +
+      "_" +
+      Math.random()
+        .toString(36)
+        .slice(2);
 
-    const script = document.createElement("script");
+    const script =
+      document.createElement("script");
 
-    const query = new URLSearchParams({
-      ...params,
-      callback: callbackName
-    });
+    const query =
+      new URLSearchParams({
+        ...params,
+        callback: callbackName
+      });
 
-    const timeout = setTimeout(() => {
-      cleanup();
-      reject(new Error("Server request timed out"));
-    }, 15000);
+    const timeout =
+      setTimeout(() => {
+
+        cleanup();
+
+        reject(
+          new Error(
+            "Server request timed out"
+          )
+        );
+
+      }, 15000);
+
 
     function cleanup() {
+
       clearTimeout(timeout);
+
       delete window[callbackName];
+
       script.remove();
     }
 
-    window[callbackName] = data => {
-      cleanup();
-      resolve(data);
-    };
+
+    window[callbackName] =
+      data => {
+
+        cleanup();
+
+        resolve(data);
+      };
+
 
     script.onerror = () => {
+
       cleanup();
-      reject(new Error("Could not connect to attendance server"));
+
+      reject(
+        new Error(
+          "Could not connect to attendance server"
+        )
+      );
     };
 
-    script.src = API_URL + "?" + query.toString();
+
+    script.src =
+      API_URL +
+      "?" +
+      query.toString();
+
 
     document.body.appendChild(script);
+
   });
 }
+
+
+/* =========================================================
+   POST
+========================================================= */
 
 async function postData(payload) {
+
   await fetch(API_URL, {
+
     method: "POST",
+
     mode: "no-cors",
+
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+      "Content-Type":
+        "application/x-www-form-urlencoded;charset=UTF-8"
     },
-    body: new URLSearchParams({
-      payload: JSON.stringify(payload)
-    })
+
+    body:
+      new URLSearchParams({
+        payload:
+          JSON.stringify(payload)
+      })
   });
 }
+
+
+/* =========================================================
+   DATE
+========================================================= */
 
 function formatDate(iso) {
-  return new Date(iso + "T12:00:00").toLocaleDateString("en-GB", {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-    year: "numeric"
-  });
+
+  return new Date(
+    iso + "T12:00:00"
+  ).toLocaleDateString(
+    "en-GB",
+    {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      year: "numeric"
+    }
+  );
 }
+
+
+/* =========================================================
+   PHONE NORMALIZATION
+========================================================= */
 
 function normalizePhone(phone) {
-  return String(phone || "").replace(/\D/g, "");
+
+  return String(phone || "")
+    .replace(/\D/g, "");
 }
 
-function notify(message, error = false) {
-  const box = document.getElementById("message");
+
+/*
+  Search normalization.
+
+  Example:
+
+  08012345678
+  8012345678
+
+  both become:
+
+  8012345678
+*/
+
+function normalizePhoneForSearch(phone) {
+
+  let value =
+    normalizePhone(phone);
+
+  if (value.startsWith("0")) {
+
+    value =
+      value.substring(1);
+  }
+
+  return value;
+}
+
+
+/* =========================================================
+   NOTIFICATION
+========================================================= */
+
+function notify(
+  message,
+  error = false
+) {
+
+  const box =
+    document.getElementById(
+      "message"
+    );
 
   box.textContent = message;
-  box.className = error ? "error" : "";
-  box.style.display = "block";
+
+  box.className =
+    error ? "error" : "";
+
+  box.style.display =
+    "block";
 
   setTimeout(() => {
-    box.style.display = "none";
+
+    box.style.display =
+      "none";
+
   }, 3500);
 }
 
+
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
+
 async function loadInitial() {
+
   try {
-    const result = await jsonp({ action: "initial" });
 
-    if (!result.success) {
-      throw new Error(result.message);
-    }
-
-    members = result.members;
-    dates = result.dates;
-
-    const select = document.getElementById("dateSelect");
-
-    select.innerHTML = dates.map(date =>
-      `<option value="${date}">${formatDate(date)}</option>`
-    ).join("");
-
-    if (!selectedDate || !dates.includes(selectedDate)) {
-      selectedDate = dates[0];
-    }
-
-    select.value = selectedDate;
-
-    if (!select.dataset.listenerAttached) {
-      select.addEventListener("change", async () => {
-        selectedDate = select.value;
-        await loadAttendance();
+    const result =
+      await jsonp({
+        action: "initial"
       });
 
-      select.dataset.listenerAttached = "true";
+
+    if (!result.success) {
+
+      throw new Error(
+        result.message
+      );
     }
+
+
+    members =
+      result.members;
+
+    dates =
+      result.dates;
+
+
+    const select =
+      document.getElementById(
+        "dateSelect"
+      );
+
+
+    select.innerHTML =
+      dates
+        .map(date =>
+          `<option value="${date}">
+            ${formatDate(date)}
+          </option>`
+        )
+        .join("");
+
+
+    if (
+      !selectedDate ||
+      !dates.includes(selectedDate)
+    ) {
+
+      selectedDate =
+        dates[0];
+    }
+
+
+    select.value =
+      selectedDate;
+
+
+    if (
+      !select.dataset
+        .listenerAttached
+    ) {
+
+      select.addEventListener(
+        "change",
+        async () => {
+
+          selectedDate =
+            select.value;
+
+          updateAttendanceDateLabel();
+
+          await loadAttendance();
+        }
+      );
+
+
+      select.dataset.listenerAttached =
+        "true";
+    }
+
+
+    updateAttendanceDateLabel();
 
     await loadAttendance();
 
-    document.getElementById("syncStatus").textContent = "Connected";
+
+    document.getElementById(
+      "syncStatus"
+    ).textContent =
+      "Connected";
 
   } catch (error) {
-    document.getElementById("syncStatus").textContent = error.message;
-    notify(error.message, true);
+
+    document.getElementById(
+      "syncStatus"
+    ).textContent =
+      error.message;
+
+    notify(
+      error.message,
+      true
+    );
   }
 }
+
+
+/* =========================================================
+   LOAD ATTENDANCE
+========================================================= */
 
 async function loadAttendance() {
+
+  if (!selectedDate) {
+    return;
+  }
+
+
   try {
-    const result = await jsonp({
-      action: "attendance",
-      date: selectedDate
-    });
+
+    const result =
+      await jsonp({
+
+        action:
+          "attendance",
+
+        date:
+          selectedDate
+      });
+
 
     if (!result.success) {
-      throw new Error(result.message);
+
+      throw new Error(
+        result.message
+      );
     }
 
-    records = result.records;
+
+    records =
+      result.records;
+
 
     updateStats();
+
     renderTable();
 
-    document.getElementById("syncStatus").textContent =
-      "Last synced: " + new Date().toLocaleTimeString();
+
+    document.getElementById(
+      "syncStatus"
+    ).textContent =
+      "Last synced: " +
+      new Date()
+        .toLocaleTimeString();
+
 
   } catch (error) {
-    document.getElementById("syncStatus").textContent = "Sync error";
+
+    document.getElementById(
+      "syncStatus"
+    ).textContent =
+      "Sync error";
   }
 }
 
-function updateStats() {
-  const total = records.length;
-  const present = records.filter(r => r.present).length;
-  const absent = total - present;
-  const rate = total ? Math.round((present / total) * 100) : 0;
 
-  document.getElementById("totalMembers").textContent = total;
-  document.getElementById("presentCount").textContent = present;
-  document.getElementById("absentCount").textContent = absent;
-  document.getElementById("attendanceRate").textContent = rate + "%";
+/* =========================================================
+   STATS
+========================================================= */
+
+function updateStats() {
+
+  const total =
+    records.length;
+
+  const present =
+    records.filter(
+      r => r.present
+    ).length;
+
+  const absent =
+    total - present;
+
+  const rate =
+    total
+      ? Math.round(
+          (present / total) * 100
+        )
+      : 0;
+
+
+  document.getElementById(
+    "totalMembers"
+  ).textContent =
+    total;
+
+
+  document.getElementById(
+    "presentCount"
+  ).textContent =
+    present;
+
+
+  document.getElementById(
+    "absentCount"
+  ).textContent =
+    absent;
+
+
+  document.getElementById(
+    "attendanceRate"
+  ).textContent =
+    rate + "%";
 }
 
+
+/* =========================================================
+   RENDER TABLE
+========================================================= */
+
 function renderTable() {
-  const body = document.getElementById("attendanceBody");
 
-  const search = document.getElementById("search")
-    .value.trim().toLowerCase();
+  const body =
+    document.getElementById(
+      "attendanceBody"
+    );
 
-  const filtered = records.filter(r =>
-    r.name.toLowerCase().includes(search) ||
-    r.phone.toLowerCase().includes(search)
-  );
+
+  const search =
+    document.getElementById(
+      "search"
+    )
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  /*
+    Search phone numbers using
+    normalized values.
+
+    This means:
+
+    08012345678
+
+    and
+
+    8012345678
+
+    will match.
+  */
+
+  const normalizedSearchPhone =
+    normalizePhoneForSearch(
+      search
+    );
+
+
+  const filtered =
+    records.filter(r => {
+
+      const nameMatch =
+        r.name
+          .toLowerCase()
+          .includes(search);
+
+
+      const phoneMatch =
+        normalizePhoneForSearch(
+          r.phone
+        ).includes(
+          normalizedSearchPhone
+        );
+
+
+      return nameMatch ||
+        phoneMatch;
+    });
+
 
   if (!filtered.length) {
+
     body.innerHTML = `
       <tr>
         <td colspan="4" class="empty">
@@ -702,296 +1310,845 @@ function renderTable() {
         </td>
       </tr>
     `;
+
     return;
   }
 
-  body.innerHTML = filtered.map(r => `
-    <tr>
-      <td>
-        <div class="member-name">${escapeHtml(r.name)}</div>
-        <div class="phone">${escapeHtml(r.phone)}</div>
-      </td>
 
-      <td>
-        <span class="status ${r.present ? "present" : "absent"}">
-          ${r.present ? "Present" : "Absent"}
-        </span>
-      </td>
+  body.innerHTML =
+    filtered
+      .map(r => `
 
-      <td class="hide-mobile">
-        <div class="progress">
-          <span style="width:${r.present ? 100 : 0}%"></span>
-        </div>
-      </td>
+        <tr>
 
-      <td>
-        <button
-          class="toggle ${r.present ? "on" : "off"}"
-          onclick="toggleAttendance(
-            '${escapeJs(r.name)}',
-            '${escapeJs(r.phone)}',
-            ${!r.present}
-          )"
-          ${busy ? "disabled" : ""}
-        >
-          ${r.present ? "✓ Present" : "Mark Present"}
-        </button>
-      </td>
-    </tr>
-  `).join("");
+          <td>
+
+            <div class="member-name">
+              ${escapeHtml(r.name)}
+            </div>
+
+            <div class="phone">
+              ${escapeHtml(r.phone)}
+            </div>
+
+          </td>
+
+
+          <td>
+
+            <span
+              class="status ${
+                r.present
+                  ? "present"
+                  : "absent"
+              }"
+            >
+              ${
+                r.present
+                  ? "Present"
+                  : "Absent"
+              }
+            </span>
+
+          </td>
+
+
+          <td class="hide-mobile">
+
+            <div class="progress">
+
+              <span
+                style="width:${
+                  r.present
+                    ? 100
+                    : 0
+                }%"
+              ></span>
+
+            </div>
+
+          </td>
+
+
+          <td>
+
+            <button
+              class="toggle ${
+                r.present
+                  ? "on"
+                  : "off"
+              }"
+
+              onclick="toggleAttendance(
+                '${escapeJs(r.name)}',
+                '${escapeJs(r.phone)}',
+                ${!r.present}
+              )"
+
+              ${
+                busy
+                  ? "disabled"
+                  : ""
+              }
+            >
+
+              ${
+                r.present
+                  ? "✓ Present"
+                  : "Mark Present"
+              }
+
+            </button>
+
+          </td>
+
+        </tr>
+
+      `)
+      .join("");
 }
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
 
 function escapeHtml(value) {
-  return String(value).replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  })[char]);
+
+  return String(value)
+    .replace(
+      /[&<>"']/g,
+      char =>
+        ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#039;"
+        })[char]
+    );
 }
+
+
+/* =========================================================
+   ESCAPE JS
+========================================================= */
 
 function escapeJs(value) {
+
   return String(value)
-    .replace(/\\/g, "\\\\")
-    .replace(/'/g, "\\'");
+    .replace(
+      /\\/g,
+      "\\\\"
+    )
+    .replace(
+      /'/g,
+      "\\'"
+    );
 }
 
-async function toggleAttendance(name, phone, present) {
-  if (busy) return;
+
+/* =========================================================
+   TOGGLE ATTENDANCE
+========================================================= */
+
+async function toggleAttendance(
+  name,
+  phone,
+  present
+) {
+
+  if (busy) {
+    return;
+  }
+
 
   busy = true;
 
-  const record = records.find(r =>
-    r.name === name && r.phone === phone
-  );
 
-  if (record) record.present = present;
+  const record =
+    records.find(r =>
+      r.name === name &&
+      normalizePhoneForSearch(
+        r.phone
+      ) ===
+      normalizePhoneForSearch(
+        phone
+      )
+    );
 
-  updateStats();
-  renderTable();
+
+  /*
+    INSTANT WEBSITE UPDATE
+
+    The UI changes immediately,
+    without waiting for Google Sheets.
+  */
+
+  if (record) {
+
+    record.present =
+      present;
+
+    updateStats();
+
+    renderTable();
+  }
+
 
   try {
+
     await postData({
-      action: "updateAttendance",
+
+      action:
+        "updateAttendance",
+
       name,
+
       phone,
-      date: selectedDate,
+
+      date:
+        selectedDate,
+
       present
     });
 
-    notify("Attendance update submitted");
 
-    setTimeout(loadAttendance, 1500);
+    notify(
+      present
+        ? "Marked present"
+        : "Marked absent"
+    );
+
+
+    /*
+      Give Apps Script a short moment
+      to write to Google Sheets,
+      then immediately sync back.
+    */
+
+    setTimeout(
+      () => {
+        loadAttendance();
+      },
+      400
+    );
+
 
   } catch (error) {
-    notify("Could not submit attendance", true);
+
+    notify(
+      "Could not submit attendance",
+      true
+    );
+
     await loadAttendance();
 
   } finally {
+
     busy = false;
+
     renderTable();
   }
 }
 
-// -------------------------
-// ADD MEMBER MODAL
-// -------------------------
+
+/* =========================================================
+   ADD MEMBER MODAL
+========================================================= */
 
 function openModal() {
-  document.getElementById("memberModal").classList.add("show");
 
-  document.getElementById("duplicateBox").classList.remove("show");
+  document
+    .getElementById(
+      "memberModal"
+    )
+    .classList
+    .add("show");
 
-  duplicateMember = null;
 
-  document.getElementById("newName").focus();
+  document
+    .getElementById(
+      "duplicateBox"
+    )
+    .classList
+    .remove("show");
+
+
+  duplicateMember =
+    null;
+
+
+  /*
+    Default new members to Present.
+  */
+
+  document.getElementById(
+    "newMemberPresent"
+  ).checked = true;
+
+
+  updateAttendanceDateLabel();
+
+
+  document
+    .getElementById(
+      "newName"
+    )
+    .focus();
 }
+
+
+/* =========================================================
+   CLOSE MODAL
+========================================================= */
 
 function closeModal() {
-  document.getElementById("memberModal").classList.remove("show");
 
-  document.getElementById("memberForm").reset();
+  document
+    .getElementById(
+      "memberModal"
+    )
+    .classList
+    .remove("show");
 
-  document.getElementById("duplicateBox").classList.remove("show");
 
-  duplicateMember = null;
+  document
+    .getElementById(
+      "memberForm"
+    )
+    .reset();
+
+
+  document
+    .getElementById(
+      "newMemberPresent"
+    )
+    .checked = true;
+
+
+  document
+    .getElementById(
+      "duplicateBox"
+    )
+    .classList
+    .remove("show");
+
+
+  duplicateMember =
+    null;
 }
 
-// LIVE PHONE NUMBER DUPLICATE CHECK
 
-document.getElementById("newPhone").addEventListener("input", function() {
+/* =========================================================
+   SHOW SELECTED DATE IN MODAL
+========================================================= */
 
-  const typedPhone = normalizePhone(this.value);
+function updateAttendanceDateLabel() {
 
-  const duplicateBox = document.getElementById("duplicateBox");
-  const saveButton = document.getElementById("saveMemberBtn");
+  const label =
+    document.getElementById(
+      "attendanceDateLabel"
+    );
 
-  duplicateMember = null;
-
-  duplicateBox.classList.remove("show");
-  saveButton.disabled = false;
-
-  if (typedPhone.length < 7) return;
-
-  const match = members.find(member =>
-    normalizePhone(member.phone) === typedPhone
-  );
-
-  if (match) {
-
-    duplicateMember = match;
-
-    document.getElementById("duplicateName").textContent =
-      match.name;
-
-    document.getElementById("duplicatePhone").textContent =
-      match.phone;
-
-    duplicateBox.classList.add("show");
-
-    saveButton.disabled = true;
-  }
-});
-
-// MARK EXISTING MEMBER PRESENT
-
-async function markExistingMemberPresent() {
-  if (!duplicateMember) return;
-
-  const member = duplicateMember;
-
-  const button = document.getElementById("markExistingBtn");
-
-  button.disabled = true;
-  button.textContent = "Updating...";
-
-  try {
-    await postData({
-      action: "updateAttendance",
-      name: member.name,
-      phone: member.phone,
-      date: selectedDate,
-      present: true
-    });
-
-    closeModal();
-
-    document.getElementById("search").value = member.phone;
-
-    notify(member.name + " marked present");
-
-    setTimeout(async () => {
-      await loadAttendance();
-      renderTable();
-    }, 1500);
-
-  } catch (error) {
-    notify("Could not update attendance", true);
-
-  } finally {
-    button.disabled = false;
-    button.textContent = "Mark Existing Member Present";
-  }
-}
-
-// ADD NEW MEMBER
-
-document.getElementById("memberForm").addEventListener("submit", async event => {
-
-  event.preventDefault();
-
-  const name = document.getElementById("newName").value.trim();
-  const phone = document.getElementById("newPhone").value.trim();
-
-  const normalizedPhone = normalizePhone(phone);
-
-  const button = document.getElementById("saveMemberBtn");
-
-  // Check against the currently loaded members before submitting.
-  const existing = members.find(member =>
-    normalizePhone(member.phone) === normalizedPhone
-  );
-
-  if (existing) {
-    notify("This number already belongs to " + existing.name, true);
+  if (!label) {
     return;
   }
 
-  button.disabled = true;
-  button.textContent = "Adding...";
+  if (!selectedDate) {
+
+    label.textContent =
+      "";
+
+    return;
+  }
+
+  label.textContent =
+    "· " +
+    formatDate(selectedDate);
+}
+
+
+/* =========================================================
+   LIVE PHONE DUPLICATE CHECK
+========================================================= */
+
+document
+  .getElementById(
+    "newPhone"
+  )
+  .addEventListener(
+    "input",
+    function() {
+
+      const typedPhone =
+        normalizePhoneForSearch(
+          this.value
+        );
+
+
+      const duplicateBox =
+        document.getElementById(
+          "duplicateBox"
+        );
+
+
+      const saveButton =
+        document.getElementById(
+          "saveMemberBtn"
+        );
+
+
+      duplicateMember =
+        null;
+
+
+      duplicateBox
+        .classList
+        .remove("show");
+
+
+      saveButton.disabled =
+        false;
+
+
+      if (
+        typedPhone.length < 7
+      ) {
+
+        return;
+      }
+
+
+      const match =
+        members.find(
+          member =>
+            normalizePhoneForSearch(
+              member.phone
+            ) === typedPhone
+        );
+
+
+      if (match) {
+
+        duplicateMember =
+          match;
+
+
+        document.getElementById(
+          "duplicateName"
+        ).textContent =
+          match.name;
+
+
+        document.getElementById(
+          "duplicatePhone"
+        ).textContent =
+          match.phone;
+
+
+        duplicateBox
+          .classList
+          .add("show");
+
+
+        saveButton.disabled =
+          true;
+      }
+
+    }
+  );
+
+
+/* =========================================================
+   MARK EXISTING MEMBER PRESENT
+========================================================= */
+
+async function markExistingMemberPresent() {
+
+  if (!duplicateMember) {
+    return;
+  }
+
+
+  const member =
+    duplicateMember;
+
+
+  const button =
+    document.getElementById(
+      "markExistingBtn"
+    );
+
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    "Updating...";
+
+
+  /*
+    Immediately update local UI.
+  */
+
+  const record =
+    records.find(r =>
+      normalizePhoneForSearch(
+        r.phone
+      ) ===
+      normalizePhoneForSearch(
+        member.phone
+      ) &&
+      r.name === member.name
+    );
+
+
+  if (record) {
+
+    record.present =
+      true;
+
+    updateStats();
+
+    renderTable();
+  }
+
 
   try {
+
     await postData({
-      action: "addMember",
-      name,
-      phone
+
+      action:
+        "updateAttendance",
+
+      name:
+        member.name,
+
+      phone:
+        member.phone,
+
+      date:
+        selectedDate,
+
+      present:
+        true
     });
+
 
     closeModal();
 
-    notify("Member submission sent. Refreshing...");
 
-    setTimeout(async () => {
-      await loadInitial();
+    document.getElementById(
+      "search"
+    ).value =
+      member.phone;
 
-      document.getElementById("search").value = phone;
 
-      renderTable();
-    }, 1800);
+    notify(
+      member.name +
+      " marked present"
+    );
+
+
+    setTimeout(
+      async () => {
+
+        await loadAttendance();
+
+        renderTable();
+
+      },
+      400
+    );
+
 
   } catch (error) {
-    notify(error.message, true);
+
+    notify(
+      "Could not update attendance",
+      true
+    );
 
   } finally {
-    button.disabled = false;
-    button.textContent = "Add Member";
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "Mark Existing Member Present";
   }
-});
+}
 
-// -------------------------
-// EXCEL EXPORT
-// -------------------------
 
-async function exportExcel() {
-  try {
-    const initial = await jsonp({ action: "initial" });
+/* =========================================================
+   ADD NEW MEMBER
+========================================================= */
 
-    if (!initial.success) {
-      throw new Error(initial.message);
-    }
+document
+  .getElementById(
+    "memberForm"
+  )
+  .addEventListener(
+    "submit",
+    async event => {
 
-    const allDates = initial.dates;
-    const allMembers = initial.members;
+      event.preventDefault();
 
-    const rows = [
-      ["Name", "Phone", ...allDates.map(formatDate)]
-    ];
 
-    for (const member of allMembers) {
+      const name =
+        document
+          .getElementById(
+            "newName"
+          )
+          .value
+          .trim();
 
-      const row = [member.name, member.phone];
 
-      for (const date of allDates) {
+      const phone =
+        document
+          .getElementById(
+            "newPhone"
+          )
+          .value
+          .trim();
 
-        const data = await jsonp({
-          action: "attendance",
-          date
-        });
 
-        const found = data.records.find(r =>
-          r.name === member.name &&
-          r.phone === member.phone
+      const normalizedPhone =
+        normalizePhoneForSearch(
+          phone
         );
 
-        row.push(found && found.present ? "Y" : "");
+
+      /*
+        Get Present / Absent choice.
+      */
+
+      const present =
+        document
+          .getElementById(
+            "newMemberPresent"
+          )
+          .checked;
+
+
+      const button =
+        document.getElementById(
+          "saveMemberBtn"
+        );
+
+
+      /*
+        Check against currently loaded
+        members before submitting.
+      */
+
+      const existing =
+        members.find(
+          member =>
+            normalizePhoneForSearch(
+              member.phone
+            ) === normalizedPhone
+        );
+
+
+      if (existing) {
+
+        notify(
+          "This number already belongs to " +
+          existing.name,
+          true
+        );
+
+        return;
       }
+
+
+      button.disabled =
+        true;
+
+      button.textContent =
+        "Adding...";
+
+
+      try {
+
+        await postData({
+
+          action:
+            "addMember",
+
+          name,
+
+          phone,
+
+          date:
+            selectedDate,
+
+          present
+        });
+
+
+        closeModal();
+
+
+        notify(
+          present
+            ? "Member added as present. Refreshing..."
+            : "Member added as absent. Refreshing..."
+        );
+
+
+        /*
+          Refresh quickly after Apps Script
+          writes the member and attendance.
+        */
+
+        setTimeout(
+          async () => {
+
+            await loadInitial();
+
+
+            document.getElementById(
+              "search"
+            ).value =
+              phone;
+
+
+            renderTable();
+
+          },
+          500
+        );
+
+
+      } catch (error) {
+
+        notify(
+          error.message,
+          true
+        );
+
+      } finally {
+
+        button.disabled =
+          false;
+
+        button.textContent =
+          "Add Member";
+      }
+
+    }
+  );
+
+
+/* =========================================================
+   EXCEL EXPORT
+========================================================= */
+
+async function exportExcel() {
+
+  try {
+
+    const initial =
+      await jsonp({
+        action: "initial"
+      });
+
+
+    if (!initial.success) {
+
+      throw new Error(
+        initial.message
+      );
+    }
+
+
+    const allDates =
+      initial.dates;
+
+
+    const allMembers =
+      initial.members;
+
+
+    const rows = [
+
+      [
+        "Name",
+        "Phone",
+        ...allDates.map(
+          formatDate
+        )
+      ]
+
+    ];
+
+
+    for (
+      const member
+      of allMembers
+    ) {
+
+      const row = [
+        member.name,
+        member.phone
+      ];
+
+
+      for (
+        const date
+        of allDates
+      ) {
+
+        const data =
+          await jsonp({
+
+            action:
+              "attendance",
+
+            date
+          });
+
+
+        const found =
+          data.records.find(
+            r =>
+              r.name ===
+                member.name &&
+
+              normalizePhoneForSearch(
+                r.phone
+              ) ===
+              normalizePhoneForSearch(
+                member.phone
+              )
+          );
+
+
+        row.push(
+          found &&
+          found.present
+            ? "Y"
+            : ""
+        );
+      }
+
 
       rows.push(row);
     }
 
-    const workbook = XLSX.utils.book_new();
-    const worksheet = XLSX.utils.aoa_to_sheet(rows);
+
+    const workbook =
+      XLSX.utils.book_new();
+
+
+    const worksheet =
+      XLSX.utils.aoa_to_sheet(
+        rows
+      );
+
 
     XLSX.utils.book_append_sheet(
       workbook,
@@ -999,23 +2156,49 @@ async function exportExcel() {
       "Attendance"
     );
 
+
     XLSX.writeFile(
       workbook,
       "Church_Attendance_2026.xlsx"
     );
 
+
   } catch (error) {
-    notify("Export failed: " + error.message, true);
+
+    notify(
+      "Export failed: " +
+      error.message,
+      true
+    );
   }
 }
 
-// AUTO REFRESH EVERY FIVE SECONDS
 
-setInterval(() => {
-  if (!document.hidden && !busy && selectedDate) {
-    loadAttendance();
-  }
-}, 5000);
+/* =========================================================
+   AUTO REFRESH
+   EVERY 3 SECONDS
+========================================================= */
+
+setInterval(
+  () => {
+
+    if (
+      !document.hidden &&
+      !busy &&
+      selectedDate
+    ) {
+
+      loadAttendance();
+    }
+
+  },
+  3000
+);
+
+
+/* =========================================================
+   START APP
+========================================================= */
 
 loadInitial();
 
