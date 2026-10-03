@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -286,8 +287,6 @@ tr:last-child td {
     transform: rotate(360deg);
   }
 }
-
-/* Larger spinner for modal button */
 
 .modal-spinner {
   width: 14px;
@@ -583,12 +582,7 @@ tr:last-child td {
 
 </header>
 
-
 <main class="container">
-
-  <!-- =====================================================
-       TOOLBAR
-  ====================================================== -->
 
   <div class="toolbar">
 
@@ -601,7 +595,6 @@ tr:last-child td {
       <select id="dateSelect"></select>
 
     </div>
-
 
     <div class="toolbar-right">
 
@@ -616,62 +609,29 @@ tr:last-child td {
 
   </div>
 
-
-  <!-- =====================================================
-       STATS
-  ====================================================== -->
-
   <section class="stats">
 
     <div class="stat">
-
       <small>Total Members</small>
-
-      <h2 id="totalMembers">
-        0
-      </h2>
-
+      <h2 id="totalMembers">0</h2>
     </div>
 
-
     <div class="stat">
-
       <small>Present</small>
-
-      <h2 id="presentCount">
-        0
-      </h2>
-
+      <h2 id="presentCount">0</h2>
     </div>
 
-
     <div class="stat">
-
       <small>Absent</small>
-
-      <h2 id="absentCount">
-        0
-      </h2>
-
+      <h2 id="absentCount">0</h2>
     </div>
 
-
     <div class="stat">
-
       <small>Attendance Rate</small>
-
-      <h2 id="attendanceRate">
-        0%
-      </h2>
-
+      <h2 id="attendanceRate">0%</h2>
     </div>
 
   </section>
-
-
-  <!-- =====================================================
-       ATTENDANCE TABLE
-  ====================================================== -->
 
   <section class="panel">
 
@@ -681,7 +641,6 @@ tr:last-child td {
         Attendance Register
       </h2>
 
-
       <div class="search-area">
 
         <input
@@ -689,7 +648,6 @@ tr:last-child td {
           placeholder="Search name or phone..."
           oninput="renderTable()"
         >
-
 
         <button
           class="add-search-btn"
@@ -702,7 +660,6 @@ tr:last-child td {
 
     </div>
 
-
     <div style="overflow-x:auto">
 
       <table>
@@ -711,26 +668,19 @@ tr:last-child td {
 
           <tr>
 
-            <th>
-              Member
-            </th>
+            <th>Member</th>
 
-            <th>
-              Status
-            </th>
+            <th>Status</th>
 
             <th class="hide-mobile">
               Attendance
             </th>
 
-            <th>
-              Action
-            </th>
+            <th>Action</th>
 
           </tr>
 
         </thead>
-
 
         <tbody id="attendanceBody">
 
@@ -753,11 +703,6 @@ tr:last-child td {
 
   </section>
 
-
-  <!-- =====================================================
-       FOOTER
-  ====================================================== -->
-
   <div class="footer">
 
     <span id="syncStatus">
@@ -770,17 +715,7 @@ tr:last-child td {
 
 </main>
 
-
-<!-- =====================================================
-     MESSAGE
-===================================================== -->
-
 <div id="message"></div>
-
-
-<!-- =====================================================
-     ADD MEMBER MODAL
-===================================================== -->
 
 <div
   class="modal"
@@ -793,7 +728,6 @@ tr:last-child td {
       Add New Member
     </h2>
 
-
     <p
       style="
         color:var(--muted);
@@ -804,13 +738,11 @@ tr:last-child td {
       Enter the member's details below.
     </p>
 
-
     <form id="memberForm">
 
       <label>
         Full name
       </label>
-
 
       <input
         id="newName"
@@ -819,11 +751,9 @@ tr:last-child td {
         placeholder="Enter member name"
       >
 
-
       <label>
         Phone number
       </label>
-
 
       <input
         id="newPhone"
@@ -831,9 +761,6 @@ tr:last-child td {
         placeholder="e.g. 08012345678"
         autocomplete="off"
       >
-
-
-      <!-- ATTENDANCE CHOICE -->
 
       <div class="attendance-choice">
 
@@ -844,7 +771,6 @@ tr:last-child td {
           <span id="attendanceDateLabel"></span>
 
         </div>
-
 
         <div class="attendance-options">
 
@@ -863,7 +789,6 @@ tr:last-child td {
             </label>
 
           </div>
-
 
           <div class="attendance-option absent-option">
 
@@ -884,9 +809,6 @@ tr:last-child td {
 
       </div>
 
-
-      <!-- DUPLICATE PHONE -->
-
       <div
         class="duplicate-box"
         id="duplicateBox"
@@ -896,18 +818,15 @@ tr:last-child td {
           Existing phone number found
         </div>
 
-
         <div
           class="duplicate-name"
           id="duplicateName"
         ></div>
 
-
         <div
           class="duplicate-phone"
           id="duplicatePhone"
         ></div>
-
 
         <div class="duplicate-actions">
 
@@ -920,7 +839,6 @@ tr:last-child td {
             Mark Existing Member Present
           </button>
 
-
           <button
             type="button"
             class="cancel-existing"
@@ -931,7 +849,6 @@ tr:last-child td {
 
         </div>
 
-
         <div class="duplicate-warning">
 
           This number already exists. You cannot create another member with the same phone number.
@@ -939,9 +856,6 @@ tr:last-child td {
         </div>
 
       </div>
-
-
-      <!-- MODAL ACTIONS -->
 
       <div class="modal-actions">
 
@@ -952,7 +866,6 @@ tr:last-child td {
         >
           Cancel
         </button>
-
 
         <button
           type="submit"
@@ -969,7 +882,6 @@ tr:last-child td {
   </div>
 
 </div>
-
 
 <script>
 
@@ -994,22 +906,30 @@ let dates = [];
 let selectedDate = "";
 
 /*
-  busy is still used for operations such as adding/exporting.
+  busy is ONLY for operations such as:
+  - adding a new member
+  - exporting Excel
 
-  Attendance updates use updatingMemberKey instead.
-  This allows every other attendance button to remain usable.
+  It is NOT used to block attendance buttons.
 */
 
 let busy = false;
 
 /*
-  Stores ONLY the member currently being updated.
+  IMPORTANT:
 
-  Example:
-  8012345678|john doe
+  Instead of one updatingMemberKey, we now use a SET.
+
+  This means:
+
+  Member A can be loading
+  Member B can still be clicked
+  Member C can still be clicked
+
+  Each member gets their own spinner.
 */
 
-let updatingMemberKey = null;
+const updatingMembers = new Set();
 
 let duplicateMember = null;
 
@@ -1030,17 +950,14 @@ function jsonp(params) {
         .toString(36)
         .slice(2);
 
-
     const script =
       document.createElement("script");
-
 
     const query =
       new URLSearchParams({
         ...params,
         callback: callbackName
       });
-
 
     const timeout =
       setTimeout(() => {
@@ -1063,6 +980,7 @@ function jsonp(params) {
       delete window[callbackName];
 
       script.remove();
+
     }
 
 
@@ -1094,7 +1012,6 @@ function jsonp(params) {
       "?" +
       query.toString();
 
-
     document.body.appendChild(script);
 
   });
@@ -1115,8 +1032,10 @@ async function postData(payload) {
     mode: "no-cors",
 
     headers: {
+
       "Content-Type":
         "application/x-www-form-urlencoded;charset=UTF-8"
+
     },
 
     body:
@@ -1170,14 +1089,12 @@ function normalizePhoneForSearch(phone) {
   let value =
     normalizePhone(phone);
 
-
   if (value.startsWith("0")) {
 
     value =
       value.substring(1);
 
   }
-
 
   return value;
 
@@ -1215,20 +1132,16 @@ function notify(
       "message"
     );
 
-
   box.textContent =
     message;
-
 
   box.className =
     error
       ? "error"
       : "";
 
-
   box.style.display =
     "block";
-
 
   setTimeout(() => {
 
@@ -1265,7 +1178,6 @@ async function loadInitial() {
 
     members =
       result.members;
-
 
     dates =
       result.dates;
@@ -1311,12 +1223,16 @@ async function loadInitial() {
         "change",
         async () => {
 
+          /*
+            Do not allow an old request
+            to continue affecting a newly
+            selected date.
+          */
+
           selectedDate =
             select.value;
 
-
           updateAttendanceDateLabel();
-
 
           await loadAttendance();
 
@@ -1331,7 +1247,6 @@ async function loadInitial() {
 
 
     updateAttendanceDateLabel();
-
 
     await loadAttendance();
 
@@ -1348,7 +1263,6 @@ async function loadInitial() {
       "syncStatus"
     ).textContent =
       error.message;
-
 
     notify(
       error.message,
@@ -1521,8 +1435,10 @@ function renderTable() {
         );
 
 
-      return nameMatch ||
-        phoneMatch;
+      return (
+        nameMatch ||
+        phoneMatch
+      );
 
     });
 
@@ -1547,16 +1463,19 @@ function renderTable() {
       .map(r => {
 
         /*
-          Check whether THIS exact member
-          is currently being updated.
+          Determine whether THIS exact
+          member is currently updating.
         */
 
-        const isUpdating =
-          updatingMemberKey ===
+        const key =
           memberKey(
             r.name,
             r.phone
           );
+
+
+        const isUpdating =
+          updatingMembers.has(key);
 
 
         return `
@@ -1622,12 +1541,15 @@ function renderTable() {
                   ? "on"
                   : "off"
               }"
+
               onclick="toggleAttendance(
                 '${escapeJs(r.name)}',
                 '${escapeJs(r.phone)}',
                 ${!r.present}
               )"
+
               ${isUpdating ? "disabled" : ""}
+
             >
 
               ${
@@ -1648,7 +1570,7 @@ function renderTable() {
 
         </tr>
 
-      `;
+        `;
 
       })
       .join("");
@@ -1707,11 +1629,6 @@ async function toggleAttendance(
   present
 ) {
 
-  /*
-    Prevent clicking the same member twice
-    while the update is still being confirmed.
-  */
-
   const key =
     memberKey(
       name,
@@ -1719,8 +1636,17 @@ async function toggleAttendance(
     );
 
 
+  /*
+    IMPORTANT:
+
+    Only stop THIS member from being
+    clicked again.
+
+    Other members remain accessible.
+  */
+
   if (
-    updatingMemberKey
+    updatingMembers.has(key)
   ) {
 
     return;
@@ -1729,19 +1655,15 @@ async function toggleAttendance(
 
 
   /*
-    Remember exactly which member
-    is being updated.
+    Add this member to the loading set.
   */
 
-  updatingMemberKey =
-    key;
+  updatingMembers.add(key);
 
 
   /*
-    Immediately show spinner.
-    IMPORTANT:
-    We do NOT change the attendance
-    status yet.
+    Immediately show spinner ONLY
+    on this member's button.
   */
 
   renderTable();
@@ -1771,12 +1693,8 @@ async function toggleAttendance(
 
 
     /*
-      POST uses no-cors, so the browser
-      cannot read the response.
-
-      Therefore we repeatedly GET the
-      attendance sheet until Google Sheets
-      confirms the expected value.
+      Wait until Google Sheets actually
+      confirms the expected state.
     */
 
     const updated =
@@ -1796,11 +1714,6 @@ async function toggleAttendance(
     }
 
 
-    /*
-      At this point records already
-      contains the confirmed value.
-    */
-
     notify(
       present
         ? "✓ Attendance marked present"
@@ -1818,8 +1731,7 @@ async function toggleAttendance(
 
 
     /*
-      Restore the real server state
-      if confirmation failed.
+      Restore actual server state.
     */
 
     await loadAttendance();
@@ -1828,12 +1740,11 @@ async function toggleAttendance(
   } finally {
 
     /*
-      Remove spinner ONLY after
-      confirmation or failure.
+      Remove ONLY this member's
+      loading state.
     */
 
-    updatingMemberKey =
-      null;
+    updatingMembers.delete(key);
 
 
     renderTable();
@@ -1853,16 +1764,24 @@ async function waitForAttendanceUpdate(
   expectedPresent
 ) {
 
-  /*
-    Maximum number of confirmation attempts.
+  const maxAttempts =
+    12;
 
-    12 attempts × 500ms ≈ 6 seconds,
-    plus network/server response time.
+  const pollingDelay =
+    500;
+
+
+  /*
+    Remember the date for this request.
+
+    This prevents a request started for
+    one Sunday from accidentally confirming
+    against another Sunday if the user
+    changes the date.
   */
 
-  const maxAttempts = 12;
-
-  const pollingDelay = 500;
+  const requestDate =
+    selectedDate;
 
 
   for (
@@ -1872,12 +1791,15 @@ async function waitForAttendanceUpdate(
   ) {
 
     /*
-      If the selected Sunday changes while
-      this request is running, stop.
+      Stop if user changed Sunday.
     */
 
-    if (!selectedDate) {
+    if (
+      selectedDate !== requestDate
+    ) {
+
       return false;
+
     }
 
 
@@ -1890,7 +1812,7 @@ async function waitForAttendanceUpdate(
             "attendance",
 
           date:
-            selectedDate
+            requestDate
 
         });
 
@@ -1919,9 +1841,8 @@ async function waitForAttendanceUpdate(
 
 
         /*
-          Only declare success when the
-          server actually reports the
-          expected state.
+          Only success when the server
+          reports the expected value.
         */
 
         if (
@@ -1930,22 +1851,32 @@ async function waitForAttendanceUpdate(
             expectedPresent
         ) {
 
-          records =
-            latestRecords;
+          /*
+            Only update the current records
+            if we are still viewing the same
+            Sunday.
+          */
 
+          if (
+            selectedDate ===
+            requestDate
+          ) {
 
-          updateStats();
+            records =
+              latestRecords;
 
+            updateStats();
 
-          renderTable();
+            renderTable();
 
+            document.getElementById(
+              "syncStatus"
+            ).textContent =
+              "Updated successfully · " +
+              new Date()
+                .toLocaleTimeString();
 
-          document.getElementById(
-            "syncStatus"
-          ).textContent =
-            "Updated successfully · " +
-            new Date()
-              .toLocaleTimeString();
+          }
 
 
           return true;
@@ -1954,22 +1885,15 @@ async function waitForAttendanceUpdate(
 
       }
 
+
     } catch (error) {
 
       /*
-        Do nothing here.
-
-        We continue polling because a
-        temporary GET failure should not
-        immediately declare the update failed.
+        Continue polling.
       */
 
     }
 
-
-    /*
-      Wait before checking again.
-    */
 
     if (
       attempt <
@@ -1989,11 +1913,6 @@ async function waitForAttendanceUpdate(
   }
 
 
-  /*
-    Google Sheets never reported the
-    expected state within the timeout.
-  */
-
   return false;
 
 }
@@ -2004,6 +1923,16 @@ async function waitForAttendanceUpdate(
 ========================================================= */
 
 function openModal() {
+
+  /*
+    Do not open the modal if an unrelated
+    operation such as export is running.
+  */
+
+  if (busy) {
+    return;
+  }
+
 
   document
     .getElementById(
@@ -2227,11 +2156,6 @@ async function markExistingMemberPresent() {
   }
 
 
-  if (updatingMemberKey) {
-    return;
-  }
-
-
   const member =
     duplicateMember;
 
@@ -2243,18 +2167,29 @@ async function markExistingMemberPresent() {
     );
 
 
+  /*
+    If THIS exact member is already
+    updating, don't send another request.
+
+    Other members can still be updated.
+  */
+
+  if (
+    updatingMembers.has(key)
+  ) {
+
+    return;
+
+  }
+
+
   const button =
     document.getElementById(
       "markExistingBtn"
     );
 
 
-  /*
-    Start spinner/loading state.
-  */
-
-  updatingMemberKey =
-    key;
+  updatingMembers.add(key);
 
 
   button.disabled =
@@ -2287,11 +2222,6 @@ async function markExistingMemberPresent() {
     });
 
 
-    /*
-      Wait until the actual Google Sheet
-      value becomes Y.
-    */
-
     const updated =
       await waitForAttendanceUpdate(
         member.name,
@@ -2308,10 +2238,6 @@ async function markExistingMemberPresent() {
 
     }
 
-
-    /*
-      Only close after confirmation.
-    */
 
     closeModal();
 
@@ -2342,8 +2268,7 @@ async function markExistingMemberPresent() {
 
   } finally {
 
-    updatingMemberKey =
-      null;
+    updatingMembers.delete(key);
 
 
     button.disabled =
@@ -2473,12 +2398,6 @@ document
         });
 
 
-        /*
-          Because POST is no-cors, wait for
-          the new member to appear in the
-          actual GET response.
-        */
-
         const added =
           await waitForNewMember(
             name,
@@ -2559,9 +2478,12 @@ async function waitForNewMember(
   const maxAttempts =
     12;
 
-
   const pollingDelay =
     500;
+
+
+  const requestDate =
+    selectedDate;
 
 
   for (
@@ -2614,7 +2536,7 @@ async function waitForNewMember(
                 "attendance",
 
               date:
-                selectedDate
+                requestDate
 
             });
 
@@ -2662,9 +2584,12 @@ async function waitForNewMember(
 
       }
 
+
     } catch (error) {
 
-      // Continue polling.
+      /*
+        Continue polling.
+      */
 
     }
 
@@ -2698,7 +2623,16 @@ async function waitForNewMember(
 
 async function exportExcel() {
 
-  if (busy || updatingMemberKey) {
+  /*
+    Export remains disabled while
+    another export/add operation is active.
+
+    Attendance updates do NOT block export
+    anymore unless you explicitly want to
+    prevent exporting during updates.
+  */
+
+  if (busy) {
     return;
   }
 
@@ -2858,18 +2792,24 @@ setInterval(
   () => {
 
     /*
-      Do not refresh while an attendance
-      update is waiting for confirmation.
+      IMPORTANT:
 
-      Otherwise the automatic refresh could
-      interfere with the spinner/confirmation
-      flow.
+      Auto-refresh is allowed even while
+      members are updating.
+
+      However, we DON'T want an automatic
+      refresh to interfere with the spinner.
+
+      The individual updating members remain
+      in the updatingMembers Set.
+
+      Their button will therefore continue
+      showing "Updating..." after refresh.
     */
 
     if (
       !document.hidden &&
       !busy &&
-      !updatingMemberKey &&
       selectedDate
     ) {
 
@@ -2892,3 +2832,4 @@ loadInitial();
 
 </body>
 </html>
+```
