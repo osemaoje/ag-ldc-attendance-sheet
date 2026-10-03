@@ -1,1326 +1,657 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Church Attendance Manager</title>
+<title>Church Attendance</title>
 
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <style>
 :root {
-  --green: #176b45;
-  --green-dark: #104a31;
-  --green-light: #e6f4eb;
-  --bg: #f5f7f6;
-  --white: #ffffff;
-  --text: #1d3026;
-  --muted: #7c8981;
-  --border: #e6ece8;
-  --gray: #727d77;
-  --gray-bg: #eef1ef;
-  --red: #c84e4e;
-  --shadow: 0 12px 35px rgba(22, 54, 36, .055);
+  --green: #176b50;
+  --green-dark: #104c3b;
+  --light: #f4f7f6;
+  --navy: #172b3a;
+  --muted: #718096;
+  --border: #e4eae7;
+  --white: #fff;
+  --red: #d94848;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Inter, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+  background: var(--light);
+  color: var(--navy);
+  font-family: Inter, Arial, sans-serif;
 }
 
-button, input, select {
-  font: inherit;
-}
+button, input, select { font: inherit; }
 
-button {
-  cursor: pointer;
-}
-
-.header {
-  background: linear-gradient(115deg, #103d2b, #176b45);
+.topbar {
+  background: linear-gradient(120deg, #104c3b, #176b50);
   color: white;
-  padding: 24px 20px 90px;
+  padding: 25px max(20px, calc((100% - 1200px)/2));
 }
 
-.header-inner {
-  max-width: 1100px;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.logo {
-  width: 47px;
-  height: 47px;
-  display: grid;
-  place-items: center;
-  border-radius: 15px;
-  background: rgba(255,255,255,.14);
-  font-size: 24px;
-}
-
-.brand h1 {
-  font-size: 19px;
-  margin: 0;
-}
-
-.brand p {
-  font-size: 12px;
-  color: #c9e3d3;
-  margin: 5px 0 0;
-}
-
-.connection {
-  font-size: 12px;
-  color: #d4f4df;
-  background: rgba(255,255,255,.12);
-  padding: 9px 13px;
-  border-radius: 30px;
-}
-
-.connection.offline {
-  color: #ffe0dc;
-  background: rgba(180,50,40,.25);
-}
+.topbar h1 { margin: 0 0 6px; font-size: 25px; }
+.topbar p { margin: 0; opacity: .8; font-size: 14px; }
 
 .container {
-  max-width: 1100px;
-  margin: -60px auto 40px;
-  padding: 0 18px;
+  max-width: 1200px;
+  margin: auto;
+  padding: 25px 20px 50px;
 }
 
-.card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  box-shadow: var(--shadow);
-}
-
-.dashboard {
-  padding: 25px;
-}
-
-.top-controls {
+.toolbar {
   display: flex;
-  justify-content: space-between;
-  align-items: end;
-  gap: 15px;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
-.field {
+.toolbar-left, .toolbar-right {
   display: flex;
-  flex-direction: column;
-  gap: 9px;
-}
-
-.label {
-  font-size: 11px;
-  color: var(--muted);
-  font-weight: 750;
-  letter-spacing: 1px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 select, input {
+  background: white;
   border: 1px solid var(--border);
-  border-radius: 11px;
-  padding: 13px 14px;
-  background: #fbfcfb;
-  color: var(--text);
+  border-radius: 9px;
+  padding: 12px 14px;
   outline: none;
-  min-width: 0;
+  min-height: 43px;
 }
 
-select:focus, input:focus {
-  border-color: var(--green);
-  box-shadow: 0 0 0 3px rgba(23,107,69,.08);
-}
+select:focus, input:focus { border-color: var(--green); }
 
-.date-select {
-  min-width: 250px;
-}
-
-.actions {
-  display: flex;
-  gap: 9px;
-  flex-wrap: wrap;
-}
-
-.btn {
-  border: none;
-  border-radius: 11px;
+button {
+  border: 0;
+  border-radius: 9px;
   padding: 12px 16px;
-  font-size: 12px;
-  font-weight: 700;
+  cursor: pointer;
+  font-weight: 600;
   transition: .2s;
 }
 
-.btn-primary {
-  background: var(--green);
-  color: white;
-}
+button:disabled { opacity: .5; cursor: not-allowed; }
 
-.btn-primary:hover {
-  background: var(--green-dark);
-}
-
-.btn-light {
-  background: var(--green-light);
-  color: var(--green);
-}
-
-.btn-light:hover {
-  background: #d5ecde;
-}
-
-.btn:disabled {
-  opacity: .55;
-  cursor: wait;
-}
+.primary { background: var(--green); color: white; }
+.primary:hover { background: var(--green-dark); }
+.secondary { background: white; color: var(--navy); border: 1px solid var(--border); }
+.export { background: #e7f4ed; color: var(--green-dark); }
 
 .stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  margin-top: 24px;
+  gap: 15px;
+  margin-bottom: 22px;
 }
 
 .stat {
-  padding: 18px;
+  background: white;
+  padding: 20px;
   border: 1px solid var(--border);
-  border-radius: 15px;
-  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px #172b3a08;
 }
 
-.stat-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 5px;
-}
+.stat small { color: var(--muted); font-size: 13px; }
+.stat h2 { margin: 9px 0 0; font-size: 28px; }
 
-.stat small {
-  font-size: 12px;
-  color: var(--muted);
-}
-
-.stat-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  background: #f0f5f1;
-  font-size: 15px;
-}
-
-.stat strong {
-  display: block;
-  margin-top: 12px;
-  font-size: 28px;
-  letter-spacing: -.7px;
-}
-
-.stat.green strong {
-  color: var(--green);
-}
-
-.stat.red strong {
-  color: var(--red);
-}
-
-.progress-track {
-  margin-top: 12px;
-  height: 5px;
-  background: #edf1ee;
-  border-radius: 10px;
+.panel {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
   overflow: hidden;
 }
 
-.progress-bar {
-  width: 0;
-  height: 100%;
-  background: var(--green);
-  border-radius: 10px;
-  transition: width .3s;
-}
-
-.search-card {
-  margin-top: 22px;
-  padding: 30px;
-}
-
-.search-heading {
-  text-align: center;
-  margin-bottom: 24px;
-}
-
-.search-heading h2 {
-  margin: 0;
-  font-size: 23px;
-}
-
-.search-heading p {
-  color: var(--muted);
-  font-size: 13px;
-  margin: 8px 0 0;
-}
-
-.search-box {
-  max-width: 650px;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border: 1px solid var(--border);
-  background: #fbfcfb;
-  padding: 0 17px;
-  border-radius: 14px;
-}
-
-.search-box:focus-within {
-  border-color: var(--green);
-  box-shadow: 0 0 0 4px rgba(23,107,69,.07);
-}
-
-.search-box input {
-  flex: 1;
-  border: none;
-  background: transparent;
-  box-shadow: none !important;
-  padding: 17px 0;
-}
-
-.search-icon {
-  font-size: 20px;
-  color: var(--muted);
-}
-
-.results-heading {
-  display: flex;
-  justify-content: space-between;
-  margin: 28px 0 13px;
-  align-items: center;
-}
-
-.results-heading strong {
-  font-size: 13px;
-}
-
-.results-heading span {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.results {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.member {
+.panel-head {
+  padding: 18px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  border: 1px solid var(--border);
-  padding: 14px;
-  border-radius: 14px;
-  transition: .2s;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
 }
 
-.member:hover {
-  background: #fcfefc;
-  border-color: #c5ddcd;
-}
+.panel-head h2 { font-size: 17px; margin: 0; }
 
-.member-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-}
+#search { width: min(100%, 300px); }
 
-.avatar {
-  width: 42px;
-  height: 42px;
-  flex-shrink: 0;
-  border-radius: 13px;
-  background: var(--green-light);
-  color: var(--green);
-  display: grid;
-  place-items: center;
-  font-weight: 750;
-  font-size: 13px;
-}
+table { width: 100%; border-collapse: collapse; }
 
-.member-name {
+th, td {
+  padding: 15px 20px;
+  border-bottom: 1px solid #edf0ee;
+  text-align: left;
   font-size: 14px;
-  font-weight: 700;
-  overflow-wrap: anywhere;
 }
 
-.member-phone {
-  font-size: 12px;
+th {
   color: var(--muted);
-  margin-top: 5px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  background: #fbfcfb;
 }
+
+tr:last-child td { border-bottom: 0; }
+
+.member-name { font-weight: 600; }
+.phone { color: var(--muted); font-size: 13px; margin-top: 4px; }
 
 .status {
-  border: none;
-  border-radius: 10px;
-  min-width: 128px;
-  padding: 12px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 11px;
+  border-radius: 30px;
   font-size: 12px;
-  font-weight: 750;
-  transition: .2s;
+  font-weight: 700;
 }
 
-.status.absent {
-  background: var(--gray-bg);
-  color: var(--gray);
+.present { background: #e5f5eb; color: #176b50; }
+.absent { background: #f1f3f4; color: #6b7280; }
+
+.toggle {
+  min-width: 95px;
+  padding: 9px 12px;
+  font-size: 12px;
 }
 
-.status.present {
-  background: var(--green-light);
-  color: var(--green);
+.toggle.on { background: #e5f5eb; color: #176b50; }
+.toggle.off { background: #f1f3f4; color: #6b7280; }
+
+.progress {
+  width: 100px;
+  height: 7px;
+  background: #edf0ee;
+  border-radius: 20px;
+  overflow: hidden;
 }
 
-.status:disabled {
-  opacity: .55;
-  cursor: wait;
+.progress span {
+  display: block;
+  height: 100%;
+  background: var(--green);
 }
 
-.empty {
-  text-align: center;
-  padding: 40px 15px;
-  color: var(--muted);
-  font-size: 13px;
-}
+.empty { text-align: center; padding: 35px; color: var(--muted); }
 
 .footer {
   text-align: center;
+  padding: 20px;
   color: var(--muted);
   font-size: 12px;
-  padding: 25px 10px;
 }
 
-.toast {
+#message {
   position: fixed;
-  bottom: 25px;
-  left: 50%;
-  transform: translate(-50%, 100px);
-  opacity: 0;
-  background: #173d2c;
+  bottom: 20px;
+  right: 20px;
+  background: #172b3a;
   color: white;
-  padding: 13px 20px;
-  border-radius: 12px;
-  font-size: 13px;
-  z-index: 20;
-  box-shadow: 0 10px 30px #0002;
-  transition: .3s;
-  max-width: calc(100% - 30px);
-  text-align: center;
+  padding: 13px 18px;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px #0002;
+  display: none;
+  z-index: 10;
 }
 
-.toast.show {
-  opacity: 1;
-  transform: translate(-50%, 0);
-}
+#message.error { background: #a83232; }
 
-/* ADD MEMBER MODAL */
-
-.modal-overlay {
+.modal {
+  display: none;
   position: fixed;
   inset: 0;
-  z-index: 15;
-  display: none;
+  background: #10221dcc;
+  z-index: 20;
   align-items: center;
   justify-content: center;
-  background: rgba(10,25,17,.5);
   padding: 15px;
 }
 
-.modal-overlay.show {
-  display: flex;
-}
+.modal.show { display: flex; }
 
-.modal {
+.modal-box {
   width: 100%;
-  max-width: 440px;
+  max-width: 420px;
   background: white;
-  padding: 27px;
-  border-radius: 20px;
-  box-shadow: 0 20px 70px #0002;
+  padding: 25px;
+  border-radius: 16px;
 }
 
-.modal h2 {
-  margin: 0;
-  font-size: 21px;
+.modal-box h2 { margin-top: 0; }
+.modal-box input { width: 100%; margin: 7px 0 12px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; }
+
+.sync { font-size: 12px; color: var(--muted); }
+
+@media(max-width: 760px) {
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .stat { padding: 15px; }
+  .stat h2 { font-size: 23px; }
+  .container { padding: 18px 12px 35px; }
+  .topbar { padding: 22px 16px; }
+  th, td { padding: 12px 10px; }
+  .hide-mobile { display: none; }
+  .progress { width: 65px; }
 }
 
-.modal p {
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.modal-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-top: 22px;
-}
-
-.modal-form input {
-  width: 100%;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 9px;
-  margin-top: 8px;
-}
-
-@media(max-width:750px) {
-  .stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .top-controls {
-    align-items: stretch;
-  }
-
-  .date-select {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .actions {
-    width: 100%;
-  }
-
-  .actions button {
-    flex: 1;
-  }
-}
-
-@media(max-width:500px) {
-  .header {
-    padding: 21px 14px 80px;
-  }
-
-  .brand h1 {
-    font-size: 15px;
-  }
-
-  .brand p {
-    font-size: 10px;
-  }
-
-  .logo {
-    width: 40px;
-    height: 40px;
-  }
-
-  .connection {
-    font-size: 10px;
-    padding: 8px;
-  }
-
-  .container {
-    padding: 0 11px;
-  }
-
-  .dashboard {
-    padding: 17px;
-  }
-
-  .search-card {
-    padding: 23px 13px;
-  }
-
-  .stat {
-    padding: 14px;
-  }
-
-  .stat strong {
-    font-size: 24px;
-  }
-
-  .stat small {
-    font-size: 11px;
-  }
-
-  .member {
-    padding: 11px 8px;
-  }
-
-  .avatar {
-    width: 35px;
-    height: 35px;
-  }
-
-  .member-name {
-    font-size: 12px;
-  }
-
-  .member-phone {
-    font-size: 10px;
-  }
-
-  .status {
-    min-width: 105px;
-    padding: 11px 7px;
-    font-size: 10px;
-  }
+@media(max-width: 420px) {
+  .toolbar-left, .toolbar-right { width: 100%; }
+  .toolbar-left select { flex: 1; }
+  .toolbar-right button { flex: 1; }
 }
 </style>
 </head>
 
 <body>
 
-<header class="header">
-  <div class="header-inner">
-
-    <div class="brand">
-      <div class="logo">✝</div>
-      <div>
-        <h1>Church Attendance</h1>
-        <p>Member attendance management</p>
-      </div>
-    </div>
-
-    <div class="connection" id="connection">
-      ● Connecting...
-    </div>
-
-  </div>
+<header class="topbar">
+  <h1>Church Attendance</h1>
+  <p>Member attendance management · October – December 2026</p>
 </header>
 
 <main class="container">
 
-  <section class="card dashboard">
-
-    <div class="top-controls">
-
-      <div class="field" style="flex:1">
-        <label class="label" for="dateSelect">
-          SELECT SUNDAY
-        </label>
-
-        <select id="dateSelect" class="date-select"></select>
-      </div>
-
-      <div class="actions">
-        <button class="btn btn-light" id="addButton">
-          + Add Member
-        </button>
-
-        <button class="btn btn-primary" id="exportButton">
-          ↓ Export Excel
-        </button>
-      </div>
-
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <label for="dateSelect"><strong>Sunday:</strong></label>
+      <select id="dateSelect"></select>
     </div>
 
-    <div class="stats">
+    <div class="toolbar-right">
+      <button class="secondary" onclick="openModal()">+ Add Member</button>
+      <button class="export" onclick="exportExcel()">↓ Export Excel</button>
+    </div>
+  </div>
 
-      <div class="stat">
-        <div class="stat-top">
-          <small>Total Members</small>
-          <span class="stat-icon">♙</span>
-        </div>
-        <strong id="totalCount">0</strong>
-      </div>
-
-      <div class="stat green">
-        <div class="stat-top">
-          <small>In Church</small>
-          <span class="stat-icon">✓</span>
-        </div>
-        <strong id="presentCount">0</strong>
-      </div>
-
-      <div class="stat red">
-        <div class="stat-top">
-          <small>Not in Church</small>
-          <span class="stat-icon">—</span>
-        </div>
-        <strong id="absentCount">0</strong>
-      </div>
-
-      <div class="stat green">
-        <div class="stat-top">
-          <small>Attendance Rate</small>
-          <span class="stat-icon">%</span>
-        </div>
-        <strong id="percentage">0%</strong>
-
-        <div class="progress-track">
-          <div class="progress-bar" id="progressBar"></div>
-        </div>
-      </div>
-
+  <section class="stats">
+    <div class="stat">
+      <small>Total Members</small>
+      <h2 id="totalMembers">0</h2>
+    </div>
+    <div class="stat">
+      <small>Present</small>
+      <h2 id="presentCount">0</h2>
+    </div>
+    <div class="stat">
+      <small>Absent</small>
+      <h2 id="absentCount">0</h2>
+    </div>
+    <div class="stat">
+      <small>Attendance Rate</small>
+      <h2 id="attendanceRate">0%</h2>
     </div>
   </section>
 
-  <section class="card search-card">
-
-    <div class="search-heading">
-      <h2>Find a Member</h2>
-      <p>Search by name or phone number to update attendance.</p>
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Attendance Register</h2>
+      <input id="search" placeholder="Search name or phone..." oninput="renderTable()">
     </div>
 
-    <div class="search-box">
-      <span class="search-icon">⌕</span>
-
-      <input
-        type="search"
-        id="searchInput"
-        placeholder="Search church members..."
-        autocomplete="off"
-      />
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>Member</th>
+            <th>Status</th>
+            <th class="hide-mobile">Attendance</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="attendanceBody">
+          <tr><td colspan="4" class="empty">Loading attendance...</td></tr>
+        </tbody>
+      </table>
     </div>
-
-    <div class="results-heading">
-      <strong>Member Directory</strong>
-      <span id="resultCount">0 members</span>
-    </div>
-
-    <div id="results" class="results">
-      <div class="empty">Loading attendance...</div>
-    </div>
-
   </section>
 
-  <footer class="footer">
-    Church Attendance Management System
-    <br><br>
-    Changes synchronize automatically every 5 seconds.
-  </footer>
+  <div class="footer">
+    <span id="syncStatus">Connecting...</span> · Automatically syncs every 5 seconds
+  </div>
 
 </main>
 
-<!-- ADD MEMBER MODAL -->
+<div id="message"></div>
 
-<div class="modal-overlay" id="modalOverlay">
-
-  <div class="modal">
-
+<div class="modal" id="memberModal">
+  <div class="modal-box">
     <h2>Add New Member</h2>
+    <form id="memberForm">
+      <label>Full name</label>
+      <input id="newName" required minlength="2" placeholder="Enter member name">
 
-    <p>
-      Enter the member's full name and phone number.
-      The new member will be added to your online spreadsheet.
-    </p>
-
-    <form id="memberForm" class="modal-form">
-
-      <div class="field">
-        <label class="label" for="memberName">
-          FULL NAME
-        </label>
-
-        <input
-          id="memberName"
-          type="text"
-          placeholder="e.g. John David"
-          minlength="3"
-          maxlength="100"
-          required
-        />
-      </div>
-
-      <div class="field">
-        <label class="label" for="memberPhone">
-          PHONE NUMBER
-        </label>
-
-        <input
-          id="memberPhone"
-          type="tel"
-          placeholder="08012345678"
-          maxlength="14"
-          required
-        />
-      </div>
+      <label>Phone number</label>
+      <input id="newPhone" required placeholder="e.g. 08012345678">
 
       <div class="modal-actions">
-        <button
-          type="button"
-          class="btn btn-light"
-          id="cancelButton"
-        >
-          Cancel
-        </button>
-
-        <button
-          type="submit"
-          class="btn btn-primary"
-          id="saveMemberButton"
-        >
-          Save Member
-        </button>
+        <button type="button" class="secondary" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="primary" id="saveMemberBtn">Add Member</button>
       </div>
-
     </form>
-
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
-
 <script>
-
-// ========================================
-// STATE
-// ========================================
+// PASTE YOUR DEPLOYED APPS SCRIPT WEB APP URL HERE.
+// This is the backend connection, not the public website URL.
+const API_URL = "https://script.google.com/macros/s/AKfycbxA_vAV3HO9FL-ckn80pWeykb4SLHtzardwHt2FL27y91qSsfuL5V6-kRpciSgkFXIBJA/exec";
 
 let members = [];
-let attendance = {};
-let selectedDate = "2026-10-04";
+let records = [];
+let dates = [];
+let selectedDate = "";
+let busy = false;
 
-let isSaving = false;
-let isRefreshing = false;
-let lastRefresh = 0;
-let toastTimer;
-
-const REFRESH_INTERVAL = 5000;
-
-const $ = id => document.getElementById(id);
-
-const dateSelect = $("dateSelect");
-const searchInput = $("searchInput");
-const results = $("results");
-
-// ========================================
-// GOOGLE APPS SCRIPT BRIDGE
-// ========================================
-
-function serverCall(functionName, ...args) {
+function jsonp(params) {
   return new Promise((resolve, reject) => {
-    if (!window.google || !google.script || !google.script.run) {
-      reject(new Error(
-        "Open this website through the deployed Apps Script URL."
-      ));
-      return;
+    const callbackName = "callback_" + Date.now() + "_" +
+      Math.random().toString(36).slice(2);
+
+    const script = document.createElement("script");
+    const query = new URLSearchParams({
+      ...params,
+      callback: callbackName
+    });
+
+    const timeout = setTimeout(() => {
+      cleanup();
+      reject(new Error("Server request timed out"));
+    }, 15000);
+
+    function cleanup() {
+      clearTimeout(timeout);
+      delete window[callbackName];
+      script.remove();
     }
 
-    google.script.run
-      .withSuccessHandler(resolve)
-      .withFailureHandler(error => {
-        reject(new Error(error.message || "Server request failed"));
-      })[functionName](...args);
+    window[callbackName] = data => {
+      cleanup();
+      resolve(data);
+    };
+
+    script.onerror = () => {
+      cleanup();
+      reject(new Error("Could not connect to attendance server"));
+    };
+
+    script.src = API_URL + "?" + query.toString();
+    document.body.appendChild(script);
   });
 }
 
-// ========================================
-// HELPERS
-// ========================================
-
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  })[char]);
+async function postData(payload) {
+  // no-cors is used because GitHub Pages and Apps Script are different origins.
+  // The browser cannot read the response; the next sync verifies the saved data.
+  await fetch(API_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+    },
+    body: new URLSearchParams({
+      payload: JSON.stringify(payload)
+    })
+  });
 }
 
-function initials(name) {
-  return name
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map(word => word[0].toUpperCase())
-    .join("");
+function formatDate(iso) {
+  return new Date(iso + "T12:00:00").toLocaleDateString("en-GB", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric"
+  });
 }
 
-function formatDate(date) {
-  return new Date(date + "T12:00:00").toLocaleDateString(
-    "en-GB",
-    {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric"
-    }
-  );
+function notify(message, error = false) {
+  const box = document.getElementById("message");
+  box.textContent = message;
+  box.className = error ? "error" : "";
+  box.style.display = "block";
+  setTimeout(() => box.style.display = "none", 3500);
 }
 
-function showToast(message) {
-  const toast = $("toast");
-
-  toast.textContent = message;
-  toast.classList.add("show");
-
-  clearTimeout(toastTimer);
-
-  toastTimer = setTimeout(() => {
-    toast.classList.remove("show");
-  }, 3000);
-}
-
-function setConnection(online) {
-  const el = $("connection");
-
-  el.textContent = online
-    ? "● Connected"
-    : "● Connection issue";
-
-  el.classList.toggle("offline", !online);
-}
-
-// ========================================
-// DATE SELECTOR
-// ========================================
-
-function initializeDates(sundays) {
-  dateSelect.innerHTML = sundays.map(date => `
-    <option value="${date}">
-      ${formatDate(date)}
-    </option>
-  `).join("");
-
-  if (!sundays.includes(selectedDate)) {
-    selectedDate = sundays[0];
-  }
-
-  dateSelect.value = selectedDate;
-}
-
-// ========================================
-// INITIAL LOAD
-// ========================================
-
-async function initializeApp() {
+async function loadInitial() {
   try {
-    const data = await serverCall("getInitialData");
+    const result = await jsonp({ action: "initial" });
 
-    members = data.members || [];
+    if (!result.success) throw new Error(result.message);
 
-    initializeDates(data.sundays);
+    members = result.members;
+    dates = result.dates;
 
-    await refreshAttendance();
+    const select = document.getElementById("dateSelect");
+    select.innerHTML = dates.map(date =>
+      `<option value="${date}">${formatDate(date)}</option>`
+    ).join("");
 
-    setConnection(true);
+    selectedDate = dates[0];
+    select.value = selectedDate;
 
-  } catch (error) {
-    console.error(error);
-
-    setConnection(false);
-
-    results.innerHTML = `
-      <div class="empty">
-        Could not connect to the attendance database.
-        Please reload the page.
-      </div>
-    `;
-
-    showToast(error.message);
-  }
-}
-
-// ========================================
-// REFRESH ATTENDANCE
-// ========================================
-
-async function refreshAttendance() {
-  if (isRefreshing || isSaving) return;
-
-  isRefreshing = true;
-
-  try {
-    const data = await serverCall(
-      "getAttendance",
-      selectedDate
-    );
-
-    const nextAttendance = {};
-
-    data.attendance.forEach(member => {
-      nextAttendance[
-        member.name.toLowerCase() + "|" + member.phone
-      ] = member.present;
+    select.addEventListener("change", async () => {
+      selectedDate = select.value;
+      await loadAttendance();
     });
 
-    attendance = nextAttendance;
-
-    // Keep the directory synchronized too.
-    const memberData = await serverCall("getInitialData");
-
-    members = memberData.members || [];
-
-    updateSummary(data.summary);
-
-    renderMembers();
-
-    lastRefresh = Date.now();
-
-    setConnection(true);
-
+    await loadAttendance();
+    document.getElementById("syncStatus").textContent = "Connected";
   } catch (error) {
-    console.error(error);
-    setConnection(false);
-
-  } finally {
-    isRefreshing = false;
+    document.getElementById("syncStatus").textContent = error.message;
+    notify(error.message, true);
   }
 }
 
-// ========================================
-// SUMMARY
-// ========================================
+async function loadAttendance() {
+  try {
+    const result = await jsonp({
+      action: "attendance",
+      date: selectedDate
+    });
 
-function updateSummary(summary) {
-  $("totalCount").textContent = summary.total;
-  $("presentCount").textContent = summary.present;
-  $("absentCount").textContent = summary.absent;
-  $("percentage").textContent = summary.percentage + "%";
+    if (!result.success) throw new Error(result.message);
 
-  $("progressBar").style.width =
-    summary.percentage + "%";
+    records = result.records;
+    updateStats();
+    renderTable();
+
+    document.getElementById("syncStatus").textContent =
+      "Last synced: " + new Date().toLocaleTimeString();
+  } catch (error) {
+    document.getElementById("syncStatus").textContent = "Sync error";
+  }
 }
 
-// ========================================
-// MEMBER SEARCH
-// ========================================
+function updateStats() {
+  const total = records.length;
+  const present = records.filter(r => r.present).length;
+  const absent = total - present;
+  const rate = total ? Math.round((present / total) * 100) : 0;
 
-function renderMembers() {
-  const query = searchInput.value.trim().toLowerCase();
+  document.getElementById("totalMembers").textContent = total;
+  document.getElementById("presentCount").textContent = present;
+  document.getElementById("absentCount").textContent = absent;
+  document.getElementById("attendanceRate").textContent = rate + "%";
+}
 
-  const filtered = members.filter(member =>
-    member.name.toLowerCase().includes(query) ||
-    member.phone.toLowerCase().includes(query)
+function renderTable() {
+  const body = document.getElementById("attendanceBody");
+  const search = document.getElementById("search").value.toLowerCase();
+
+  const filtered = records.filter(r =>
+    r.name.toLowerCase().includes(search) ||
+    r.phone.toLowerCase().includes(search)
   );
 
-  $("resultCount").textContent =
-    `${filtered.length} member${filtered.length === 1 ? "" : "s"}`;
-
   if (!filtered.length) {
-    results.innerHTML = `
-      <div class="empty">
-        No matching members found.
-      </div>
-    `;
+    body.innerHTML = `<tr><td colspan="4" class="empty">No members found</td></tr>`;
     return;
   }
 
-  results.innerHTML = filtered.map(member => {
-    const key =
-      member.name.toLowerCase() + "|" + member.phone;
-
-    const present = Boolean(attendance[key]);
+  body.innerHTML = filtered.map((r) => {
+    const member = JSON.stringify(r).replace(/"/g, "&quot;");
+    const status = r.present ? "Present" : "Absent";
 
     return `
-      <div class="member">
-
-        <div class="member-left">
-
-          <div class="avatar">
-            ${escapeHTML(initials(member.name))}
+      <tr>
+        <td>
+          <div class="member-name">${escapeHtml(r.name)}</div>
+          <div class="phone">${escapeHtml(r.phone)}</div>
+        </td>
+        <td>
+          <span class="status ${r.present ? "present" : "absent"}">
+            ${status}
+          </span>
+        </td>
+        <td class="hide-mobile">
+          <div class="progress">
+            <span style="width:${r.present ? 100 : 0}%"></span>
           </div>
-
-          <div>
-            <div class="member-name">
-              ${escapeHTML(member.name)}
-            </div>
-
-            <div class="member-phone">
-              ${escapeHTML(member.phone)}
-            </div>
-          </div>
-
-        </div>
-
-        <button
-          class="status ${present ? "present" : "absent"}"
-          data-name="${escapeHTML(member.name)}"
-          data-phone="${escapeHTML(member.phone)}"
-          data-present="${present}"
-          ${isSaving ? "disabled" : ""}
-        >
-          ${present ? "✓ In Church" : "Not in Church"}
-        </button>
-
-      </div>
-    `;
+        </td>
+        <td>
+          <button class="toggle ${r.present ? "on" : "off"}"
+            onclick="toggleAttendance('${escapeJs(r.name)}','${escapeJs(r.phone)}',${!r.present})"
+            ${busy ? "disabled" : ""}>
+            ${r.present ? "✓ Present" : "Mark Present"}
+          </button>
+        </td>
+      </tr>`;
   }).join("");
 }
 
-// ========================================
-// MARK ATTENDANCE
-// ========================================
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;",
+    '"': "&quot;", "'": "&#039;"
+  })[char]);
+}
 
-async function toggleAttendance(name, phone, button) {
-  if (isSaving) return;
+function escapeJs(value) {
+  return String(value).replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+}
 
-  const key = name.toLowerCase() + "|" + phone;
+async function toggleAttendance(name, phone, present) {
+  if (busy) return;
 
-  const previous = Boolean(attendance[key]);
+  busy = true;
 
-  const next = !previous;
+  const record = records.find(r => r.name === name && r.phone === phone);
+  if (record) record.present = present;
 
-  isSaving = true;
-
-  button.disabled = true;
-  button.textContent = "Saving...";
+  updateStats();
+  renderTable();
 
   try {
-    const result = await serverCall(
-      "updateAttendance",
+    await postData({
+      action: "updateAttendance",
       name,
       phone,
-      selectedDate,
-      next
-    );
+      date: selectedDate,
+      present
+    });
 
-    if (!result.success) {
-      throw new Error("Attendance update failed.");
-    }
-
-    attendance[key] = next;
-
-    renderMembers();
-
-    await refreshSummaryOnly();
-
-    showToast(
-      next
-        ? name + " marked In Church"
-        : name + " marked Not in Church"
-    );
-
+    notify("Attendance update submitted");
+    setTimeout(loadAttendance, 1500);
   } catch (error) {
-    console.error(error);
-
-    showToast(error.message);
-
-    button.disabled = false;
-
-    button.textContent = previous
-      ? "✓ In Church"
-      : "Not in Church";
-
+    notify("Could not submit attendance", true);
+    await loadAttendance();
   } finally {
-    isSaving = false;
-    renderMembers();
+    busy = false;
+    renderTable();
   }
 }
 
-// ========================================
-// UPDATE SUMMARY AFTER A CHANGE
-// ========================================
-
-async function refreshSummaryOnly() {
-  const data = await serverCall(
-    "getAttendance",
-    selectedDate
-  );
-
-  updateSummary(data.summary);
-}
-
-// ========================================
-// ADD MEMBER MODAL
-// ========================================
-
 function openModal() {
-  $("modalOverlay").classList.add("show");
-  $("memberName").focus();
+  document.getElementById("memberModal").classList.add("show");
 }
 
 function closeModal() {
-  $("modalOverlay").classList.remove("show");
-  $("memberForm").reset();
+  document.getElementById("memberModal").classList.remove("show");
+  document.getElementById("memberForm").reset();
 }
 
-$("addButton").addEventListener("click", openModal);
-
-$("cancelButton").addEventListener("click", closeModal);
-
-$("modalOverlay").addEventListener("click", event => {
-  if (event.target === $("modalOverlay")) {
-    closeModal();
-  }
-});
-
-// ========================================
-// SAVE NEW MEMBER
-// ========================================
-
-$("memberForm").addEventListener("submit", async event => {
+document.getElementById("memberForm").addEventListener("submit", async event => {
   event.preventDefault();
 
-  const name = $("memberName").value.trim();
-  const phone = $("memberPhone").value.trim();
-
-  const button = $("saveMemberButton");
+  const name = document.getElementById("newName").value.trim();
+  const phone = document.getElementById("newPhone").value.trim();
+  const button = document.getElementById("saveMemberBtn");
 
   button.disabled = true;
-  button.textContent = "Saving...";
+  button.textContent = "Adding...";
 
   try {
-    const result = await serverCall(
-      "addMember",
-      name,
-      phone
-    );
-
-    if (!result.success) {
-      throw new Error("Member registration failed.");
-    }
+    await postData({ action: "addMember", name, phone });
 
     closeModal();
-
-    await refreshAttendance();
-
-    showToast(name + " added successfully.");
-
+    notify("Member submission sent. Refreshing...");
+    setTimeout(async () => {
+      await loadInitial();
+    }, 1800);
   } catch (error) {
-    console.error(error);
-    showToast(error.message);
-
+    notify(error.message, true);
   } finally {
     button.disabled = false;
-    button.textContent = "Save Member";
+    button.textContent = "Add Member";
   }
 });
 
-// ========================================
-// EXPORT TO EXCEL
-// ========================================
-
 async function exportExcel() {
-  const button = $("exportButton");
-
-  button.disabled = true;
-  button.textContent = "Preparing...";
-
   try {
-    if (!window.XLSX) {
-      throw new Error("Excel export library did not load.");
+    const result = await jsonp({ action: "initial" });
+    if (!result.success) throw new Error(result.message);
+
+    const allDates = result.dates;
+    const allMembers = result.members;
+
+    const rows = [["Name", "Phone", ...allDates.map(formatDate)]];
+
+    for (const member of allMembers) {
+      const row = [member.name, member.phone];
+
+      for (const date of allDates) {
+        const data = await jsonp({ action: "attendance", date });
+        const found = data.records.find(r =>
+          r.name === member.name && r.phone === member.phone
+        );
+        row.push(found && found.present ? "Y" : "");
+      }
+
+      rows.push(row);
     }
 
-    const data = await serverCall(
-      "getExportData",
-      selectedDate
-    );
-
-    const rows = data.rows.map(member => {
-      const record = {
-        "Full Name": member.name,
-        "Phone Number": member.phone
-      };
-
-      Object.keys(member).forEach(key => {
-        if (key !== "name" && key !== "phone") {
-          record[key] = member[key];
-        }
-      });
-
-      return record;
-    });
-
-    const worksheet = XLSX.utils.json_to_sheet(rows);
-
     const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.aoa_to_sheet(rows);
 
-    XLSX.utils.book_append_sheet(
-      workbook,
-      worksheet,
-      "Attendance"
-    );
-
-    XLSX.writeFile(
-      workbook,
-      "Church_Attendance_" + selectedDate + ".xlsx"
-    );
-
-    showToast("Excel report downloaded.");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Attendance");
+    XLSX.writeFile(workbook, "Church_Attendance_2026.xlsx");
 
   } catch (error) {
-    console.error(error);
-    showToast(error.message);
-
-  } finally {
-    button.disabled = false;
-    button.textContent = "↓ Export Excel";
+    notify("Export failed: " + error.message, true);
   }
 }
 
-$("exportButton").addEventListener("click", exportExcel);
-
-// ========================================
-// EVENT LISTENERS
-// ========================================
-
-searchInput.addEventListener("input", renderMembers);
-
-dateSelect.addEventListener("change", async () => {
-  selectedDate = dateSelect.value;
-
-  await refreshAttendance();
-});
-
-results.addEventListener("click", event => {
-  const button = event.target.closest(".status");
-
-  if (!button || button.disabled) return;
-
-  toggleAttendance(
-    button.dataset.name,
-    button.dataset.phone,
-    button
-  );
-});
-
-// ========================================
-// AUTOMATIC SYNCHRONIZATION
-// ========================================
-
+// Refresh from Google Sheets every five seconds.
 setInterval(() => {
-  if (
-    !document.hidden &&
-    !isSaving &&
-    !isRefreshing &&
-    Date.now() - lastRefresh >= REFRESH_INTERVAL
-  ) {
-    refreshAttendance();
+  if (!document.hidden && !busy && selectedDate) {
+    loadAttendance();
   }
-}, REFRESH_INTERVAL);
+}, 5000);
 
-// Refresh immediately when the user returns to the page.
-document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) {
-    refreshAttendance();
-  }
-});
-
-// ========================================
-// START APPLICATION
-// ========================================
-
-initializeApp();
-
+loadInitial();
 </script>
 
 </body>
