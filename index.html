@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,19 +6,22 @@
 
 <title>Church Attendance Manager</title>
 
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
 <style>
 :root {
-  --primary: #176b45;
-  --primary-dark: #105436;
-  --background: #f4f7f5;
-  --surface: #ffffff;
-  --text: #172b22;
-  --muted: #75847c;
-  --border: #e5ebe7;
-  --success-bg: #e5f5eb;
-  --success: #16834c;
-  --gray-bg: #eef0f2;
-  --gray: #737d85;
+  --green: #176b45;
+  --green-dark: #104a31;
+  --green-light: #e6f4eb;
+  --bg: #f5f7f6;
+  --white: #ffffff;
+  --text: #1d3026;
+  --muted: #7c8981;
+  --border: #e6ece8;
+  --gray: #727d77;
+  --gray-bg: #eef1ef;
+  --red: #c84e4e;
+  --shadow: 0 12px 35px rgba(22, 54, 36, .055);
 }
 
 * {
@@ -28,24 +30,32 @@
 
 body {
   margin: 0;
+  background: var(--bg);
+  color: var(--text);
   font-family: Inter, -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
-  background: var(--background);
-  color: var(--text);
+}
+
+button, input, select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
 }
 
 .header {
-  background: linear-gradient(120deg, #103d2b, #176b45);
+  background: linear-gradient(115deg, #103d2b, #176b45);
   color: white;
-  padding: 28px 20px 85px;
+  padding: 24px 20px 90px;
 }
 
 .header-inner {
-  max-width: 1050px;
+  max-width: 1100px;
   margin: auto;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 
 .brand {
@@ -55,176 +65,257 @@ body {
 }
 
 .logo {
-  height: 48px;
-  width: 48px;
+  width: 47px;
+  height: 47px;
   display: grid;
   place-items: center;
-  background: rgba(255,255,255,.15);
   border-radius: 15px;
+  background: rgba(255,255,255,.14);
   font-size: 24px;
 }
 
 .brand h1 {
-  font-size: 20px;
+  font-size: 19px;
   margin: 0;
 }
 
 .brand p {
-  margin: 5px 0 0;
-  color: #c8e5d5;
   font-size: 12px;
+  color: #c9e3d3;
+  margin: 5px 0 0;
 }
 
-.online {
+.connection {
   font-size: 12px;
-  background: rgba(255,255,255,.14);
+  color: #d4f4df;
+  background: rgba(255,255,255,.12);
   padding: 9px 13px;
   border-radius: 30px;
 }
 
+.connection.offline {
+  color: #ffe0dc;
+  background: rgba(180,50,40,.25);
+}
+
 .container {
-  max-width: 900px;
-  margin: -58px auto 50px;
+  max-width: 1100px;
+  margin: -60px auto 40px;
   padding: 0 18px;
 }
 
 .card {
-  background: var(--surface);
+  background: var(--white);
   border: 1px solid var(--border);
   border-radius: 20px;
-  box-shadow: 0 10px 35px rgba(20,50,35,.045);
+  box-shadow: var(--shadow);
 }
 
 .dashboard {
   padding: 25px;
 }
 
-.section-label {
-  display: block;
-  color: var(--muted);
+.top-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.label {
   font-size: 11px;
-  font-weight: 700;
+  color: var(--muted);
+  font-weight: 750;
   letter-spacing: 1px;
-  margin-bottom: 10px;
+}
+
+select, input {
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 13px 14px;
+  background: #fbfcfb;
+  color: var(--text);
+  outline: none;
+  min-width: 0;
+}
+
+select:focus, input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(23,107,69,.08);
 }
 
 .date-select {
-  width: 100%;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 15px;
-  background: #fbfcfb;
-  color: var(--text);
-  font-size: 15px;
-  outline: none;
-  cursor: pointer;
+  min-width: 250px;
 }
 
-.date-select:focus,
-.search-input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(23,107,69,.08);
+.actions {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  border: none;
+  border-radius: 11px;
+  padding: 12px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  transition: .2s;
+}
+
+.btn-primary {
+  background: var(--green);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--green-dark);
+}
+
+.btn-light {
+  background: var(--green-light);
+  color: var(--green);
+}
+
+.btn-light:hover {
+  background: #d5ecde;
+}
+
+.btn:disabled {
+  opacity: .55;
+  cursor: wait;
 }
 
 .stats {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  margin-top: 20px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-top: 24px;
 }
 
 .stat {
+  padding: 18px;
   border: 1px solid var(--border);
   border-radius: 15px;
-  padding: 19px;
+  background: #fff;
+}
+
+.stat-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
 }
 
 .stat small {
-  display: block;
-  color: var(--muted);
   font-size: 12px;
+  color: var(--muted);
+}
+
+.stat-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: #f0f5f1;
+  font-size: 15px;
 }
 
 .stat strong {
   display: block;
-  margin-top: 8px;
-  font-size: 29px;
+  margin-top: 12px;
+  font-size: 28px;
+  letter-spacing: -.7px;
 }
 
-.stat.present strong {
-  color: var(--success);
+.stat.green strong {
+  color: var(--green);
+}
+
+.stat.red strong {
+  color: var(--red);
+}
+
+.progress-track {
+  margin-top: 12px;
+  height: 5px;
+  background: #edf1ee;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  width: 0;
+  height: 100%;
+  background: var(--green);
+  border-radius: 10px;
+  transition: width .3s;
 }
 
 .search-card {
   margin-top: 22px;
-  padding: 32px;
+  padding: 30px;
 }
 
-.search-title {
+.search-heading {
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 24px;
 }
 
-.search-title h2 {
+.search-heading h2 {
+  margin: 0;
   font-size: 23px;
-  margin: 0 0 8px;
 }
 
-.search-title p {
+.search-heading p {
   color: var(--muted);
   font-size: 13px;
-  margin: 0;
-}
-
-.search-wrapper {
-  position: relative;
-  max-width: 620px;
-  margin: auto;
+  margin: 8px 0 0;
 }
 
 .search-box {
+  max-width: 650px;
+  margin: auto;
   display: flex;
   align-items: center;
+  gap: 12px;
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 0 17px;
   background: #fbfcfb;
-  transition: .2s;
+  padding: 0 17px;
+  border-radius: 14px;
 }
 
 .search-box:focus-within {
-  border-color: var(--primary);
+  border-color: var(--green);
   box-shadow: 0 0 0 4px rgba(23,107,69,.07);
 }
 
-.search-icon {
-  font-size: 19px;
-  color: var(--muted);
-}
-
-.search-input {
-  width: 100%;
+.search-box input {
+  flex: 1;
   border: none;
-  outline: none;
   background: transparent;
-  padding: 17px 12px;
-  font-size: 14px;
-  color: var(--text);
+  box-shadow: none !important;
+  padding: 17px 0;
 }
 
-.search-input:focus {
-  box-shadow: none;
-}
-
-.search-input::placeholder {
-  color: #a0aaa4;
+.search-icon {
+  font-size: 20px;
+  color: var(--muted);
 }
 
 .results-heading {
   display: flex;
   justify-content: space-between;
+  margin: 28px 0 13px;
   align-items: center;
-  margin: 27px 0 13px;
 }
 
 .results-heading strong {
@@ -232,8 +323,8 @@ body {
 }
 
 .results-heading span {
-  font-size: 12px;
   color: var(--muted);
+  font-size: 12px;
 }
 
 .results {
@@ -244,21 +335,21 @@ body {
 
 .member {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   gap: 12px;
   border: 1px solid var(--border);
-  padding: 15px;
+  padding: 14px;
   border-radius: 14px;
   transition: .2s;
 }
 
 .member:hover {
-  border-color: #b7d8c5;
   background: #fcfefc;
+  border-color: #c5ddcd;
 }
 
-.member-info {
+.member-left {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -266,21 +357,21 @@ body {
 }
 
 .avatar {
-  height: 42px;
   width: 42px;
+  height: 42px;
   flex-shrink: 0;
+  border-radius: 13px;
+  background: var(--green-light);
+  color: var(--green);
   display: grid;
   place-items: center;
-  background: #e8f3ec;
-  color: var(--primary);
-  font-weight: 700;
-  border-radius: 13px;
-  font-size: 14px;
+  font-weight: 750;
+  font-size: 13px;
 }
 
 .member-name {
-  font-weight: 650;
   font-size: 14px;
+  font-weight: 700;
   overflow-wrap: anywhere;
 }
 
@@ -292,12 +383,11 @@ body {
 
 .status {
   border: none;
-  padding: 11px 14px;
   border-radius: 10px;
+  min-width: 128px;
+  padding: 12px 10px;
   font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  min-width: 125px;
+  font-weight: 750;
   transition: .2s;
 }
 
@@ -307,27 +397,27 @@ body {
 }
 
 .status.present {
-  background: var(--success-bg);
-  color: var(--success);
+  background: var(--green-light);
+  color: var(--green);
 }
 
 .status:disabled {
-  opacity: .65;
+  opacity: .55;
   cursor: wait;
 }
 
 .empty {
   text-align: center;
-  padding: 35px 15px;
+  padding: 40px 15px;
   color: var(--muted);
   font-size: 13px;
 }
 
 .footer {
   text-align: center;
-  padding: 25px 10px;
-  font-size: 12px;
   color: var(--muted);
+  font-size: 12px;
+  padding: 25px 10px;
 }
 
 .toast {
@@ -341,71 +431,150 @@ body {
   padding: 13px 20px;
   border-radius: 12px;
   font-size: 13px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.15);
+  z-index: 20;
+  box-shadow: 0 10px 30px #0002;
   transition: .3s;
-  z-index: 10;
   max-width: calc(100% - 30px);
+  text-align: center;
 }
 
 .toast.show {
-  transform: translate(-50%, 0);
   opacity: 1;
+  transform: translate(-50%, 0);
 }
 
-.loading {
-  text-align: center;
-  padding: 25px;
+/* ADD MEMBER MODAL */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 15;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10,25,17,.5);
+  padding: 15px;
+}
+
+.modal-overlay.show {
+  display: flex;
+}
+
+.modal {
+  width: 100%;
+  max-width: 440px;
+  background: white;
+  padding: 27px;
+  border-radius: 20px;
+  box-shadow: 0 20px 70px #0002;
+}
+
+.modal h2 {
+  margin: 0;
+  font-size: 21px;
+}
+
+.modal p {
   color: var(--muted);
   font-size: 13px;
+  line-height: 1.5;
 }
 
-@media(max-width:600px) {
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 22px;
+}
+
+.modal-form input {
+  width: 100%;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  margin-top: 8px;
+}
+
+@media(max-width:750px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .top-controls {
+    align-items: stretch;
+  }
+
+  .date-select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .actions {
+    width: 100%;
+  }
+
+  .actions button {
+    flex: 1;
+  }
+}
+
+@media(max-width:500px) {
   .header {
-    padding: 22px 16px 78px;
+    padding: 21px 14px 80px;
   }
 
   .brand h1 {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .brand p {
-    font-size: 11px;
+    font-size: 10px;
   }
 
   .logo {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .connection {
+    font-size: 10px;
+    padding: 8px;
   }
 
   .container {
-    padding: 0 12px;
+    padding: 0 11px;
   }
 
   .dashboard {
-    padding: 19px;
+    padding: 17px;
   }
 
   .search-card {
-    padding: 23px 15px;
+    padding: 23px 13px;
   }
 
-  .search-title h2 {
-    font-size: 20px;
+  .stat {
+    padding: 14px;
   }
 
-  .member {
-    padding: 12px 10px;
+  .stat strong {
+    font-size: 24px;
   }
 
-  .status {
-    min-width: 105px;
-    padding: 11px 8px;
+  .stat small {
     font-size: 11px;
   }
 
+  .member {
+    padding: 11px 8px;
+  }
+
   .avatar {
-    width: 36px;
-    height: 36px;
+    width: 35px;
+    height: 35px;
   }
 
   .member-name {
@@ -413,16 +582,13 @@ body {
   }
 
   .member-phone {
-    font-size: 11px;
-  }
-
-  .stat strong {
-    font-size: 24px;
-  }
-
-  .online {
     font-size: 10px;
-    padding: 8px;
+  }
+
+  .status {
+    min-width: 105px;
+    padding: 11px 7px;
+    font-size: 10px;
   }
 }
 </style>
@@ -432,6 +598,7 @@ body {
 
 <header class="header">
   <div class="header-inner">
+
     <div class="brand">
       <div class="logo">✝</div>
       <div>
@@ -440,7 +607,10 @@ body {
       </div>
     </div>
 
-    <div class="online">● Online</div>
+    <div class="connection" id="connection">
+      ● Connecting...
+    </div>
+
   </div>
 </header>
 
@@ -448,22 +618,64 @@ body {
 
   <section class="card dashboard">
 
-    <label class="section-label" for="dateSelect">
-      SELECT SUNDAY
-    </label>
+    <div class="top-controls">
 
-    <select id="dateSelect" class="date-select"></select>
+      <div class="field" style="flex:1">
+        <label class="label" for="dateSelect">
+          SELECT SUNDAY
+        </label>
+
+        <select id="dateSelect" class="date-select"></select>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-light" id="addButton">
+          + Add Member
+        </button>
+
+        <button class="btn btn-primary" id="exportButton">
+          ↓ Export Excel
+        </button>
+      </div>
+
+    </div>
 
     <div class="stats">
 
       <div class="stat">
-        <small>Total Members</small>
-        <strong id="totalMembers">0</strong>
+        <div class="stat-top">
+          <small>Total Members</small>
+          <span class="stat-icon">♙</span>
+        </div>
+        <strong id="totalCount">0</strong>
       </div>
 
-      <div class="stat present">
-        <small>Present Today</small>
+      <div class="stat green">
+        <div class="stat-top">
+          <small>In Church</small>
+          <span class="stat-icon">✓</span>
+        </div>
         <strong id="presentCount">0</strong>
+      </div>
+
+      <div class="stat red">
+        <div class="stat-top">
+          <small>Not in Church</small>
+          <span class="stat-icon">—</span>
+        </div>
+        <strong id="absentCount">0</strong>
+      </div>
+
+      <div class="stat green">
+        <div class="stat-top">
+          <small>Attendance Rate</small>
+          <span class="stat-icon">%</span>
+        </div>
+        <strong id="percentage">0%</strong>
+
+        <div class="progress-track">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
       </div>
 
     </div>
@@ -471,106 +683,157 @@ body {
 
   <section class="card search-card">
 
-    <div class="search-title">
+    <div class="search-heading">
       <h2>Find a Member</h2>
-      <p>Search for a member and update their attendance.</p>
+      <p>Search by name or phone number to update attendance.</p>
     </div>
 
-    <div class="search-wrapper">
+    <div class="search-box">
+      <span class="search-icon">⌕</span>
 
-      <div class="search-box">
-        <span class="search-icon">⌕</span>
-
-        <input
-          type="search"
-          id="searchInput"
-          class="search-input"
-          placeholder="Search by name or phone number..."
-          autocomplete="off"
-        />
-      </div>
-
+      <input
+        type="search"
+        id="searchInput"
+        placeholder="Search church members..."
+        autocomplete="off"
+      />
     </div>
 
     <div class="results-heading">
-      <strong>Members</strong>
+      <strong>Member Directory</strong>
       <span id="resultCount">0 members</span>
     </div>
 
     <div id="results" class="results">
-      <div class="loading">Loading members...</div>
+      <div class="empty">Loading attendance...</div>
     </div>
 
   </section>
 
-  <div class="footer">
+  <footer class="footer">
     Church Attendance Management System
     <br><br>
-    Attendance changes are saved online.
-  </div>
+    Changes synchronize automatically every 5 seconds.
+  </footer>
 
 </main>
 
-<div id="toast" class="toast"></div>
+<!-- ADD MEMBER MODAL -->
+
+<div class="modal-overlay" id="modalOverlay">
+
+  <div class="modal">
+
+    <h2>Add New Member</h2>
+
+    <p>
+      Enter the member's full name and phone number.
+      The new member will be added to your online spreadsheet.
+    </p>
+
+    <form id="memberForm" class="modal-form">
+
+      <div class="field">
+        <label class="label" for="memberName">
+          FULL NAME
+        </label>
+
+        <input
+          id="memberName"
+          type="text"
+          placeholder="e.g. John David"
+          minlength="3"
+          maxlength="100"
+          required
+        />
+      </div>
+
+      <div class="field">
+        <label class="label" for="memberPhone">
+          PHONE NUMBER
+        </label>
+
+        <input
+          id="memberPhone"
+          type="tel"
+          placeholder="08012345678"
+          maxlength="14"
+          required
+        />
+      </div>
+
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="btn btn-light"
+          id="cancelButton"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          id="saveMemberButton"
+        >
+          Save Member
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
 
 // ========================================
-// 1. INSERT YOUR GOOGLE APPS SCRIPT URL
+// STATE
 // ========================================
-
-const API_URL = "https://script.google.com/macros/s/AKfycbx9ACYt8JushPDx65bE6Se8RcDxMofNX8Qqv1sTu2J8EvWW37HwXaJMsjEpo01-lLhPZQ/exec";
-
-// ========================================
-// 2. SUNDAY DATES
-// ========================================
-
-const SUNDAYS = [
-  "2026-10-04",
-  "2026-10-11",
-  "2026-10-18",
-  "2026-10-25",
-  "2026-11-01",
-  "2026-11-08",
-  "2026-11-15",
-  "2026-11-22",
-  "2026-11-29",
-  "2026-12-06",
-  "2026-12-13",
-  "2026-12-20",
-  "2026-12-27"
-];
 
 let members = [];
 let attendance = {};
-let selectedDate = SUNDAYS[0];
+let selectedDate = "2026-10-04";
+
+let isSaving = false;
+let isRefreshing = false;
+let lastRefresh = 0;
 let toastTimer;
 
-// ========================================
-// 3. ELEMENTS
-// ========================================
+const REFRESH_INTERVAL = 5000;
 
-const dateSelect = document.getElementById("dateSelect");
-const searchInput = document.getElementById("searchInput");
-const results = document.getElementById("results");
-const totalMembers = document.getElementById("totalMembers");
-const presentCount = document.getElementById("presentCount");
-const resultCount = document.getElementById("resultCount");
+const $ = id => document.getElementById(id);
+
+const dateSelect = $("dateSelect");
+const searchInput = $("searchInput");
+const results = $("results");
 
 // ========================================
-// 4. HELPERS
+// GOOGLE APPS SCRIPT BRIDGE
 // ========================================
 
-function formatDate(dateString) {
-  const date = new Date(dateString + "T12:00:00");
+function serverCall(functionName, ...args) {
+  return new Promise((resolve, reject) => {
+    if (!window.google || !google.script || !google.script.run) {
+      reject(new Error(
+        "Open this website through the deployed Apps Script URL."
+      ));
+      return;
+    }
 
-  return date.toLocaleDateString("en-GB", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric"
+    google.script.run
+      .withSuccessHandler(resolve)
+      .withFailureHandler(error => {
+        reject(new Error(error.message || "Server request failed"));
+      })[functionName](...args);
   });
 }
+
+// ========================================
+// HELPERS
+// ========================================
 
 function escapeHTML(value) {
   return String(value).replace(/[&<>"']/g, char => ({
@@ -582,8 +845,29 @@ function escapeHTML(value) {
   })[char]);
 }
 
+function initials(name) {
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map(word => word[0].toUpperCase())
+    .join("");
+}
+
+function formatDate(date) {
+  return new Date(date + "T12:00:00").toLocaleDateString(
+    "en-GB",
+    {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    }
+  );
+}
+
 function showToast(message) {
-  const toast = document.getElementById("toast");
+  const toast = $("toast");
 
   toast.textContent = message;
   toast.classList.add("show");
@@ -595,155 +879,161 @@ function showToast(message) {
   }, 3000);
 }
 
-function initials(name) {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map(word => word[0].toUpperCase())
-    .join("");
+function setConnection(online) {
+  const el = $("connection");
+
+  el.textContent = online
+    ? "● Connected"
+    : "● Connection issue";
+
+  el.classList.toggle("offline", !online);
 }
 
 // ========================================
-// 5. CREATE DATE OPTIONS
+// DATE SELECTOR
 // ========================================
 
-function initializeDates() {
-  dateSelect.innerHTML = SUNDAYS.map(date => `
+function initializeDates(sundays) {
+  dateSelect.innerHTML = sundays.map(date => `
     <option value="${date}">
       ${formatDate(date)}
     </option>
   `).join("");
 
+  if (!sundays.includes(selectedDate)) {
+    selectedDate = sundays[0];
+  }
+
   dateSelect.value = selectedDate;
 }
 
 // ========================================
-// 6. LOAD MEMBERS
+// INITIAL LOAD
 // ========================================
 
-async function loadMembers() {
+async function initializeApp() {
   try {
-    const response = await fetch(
-      API_URL + "?action=getMembers"
-    );
+    const data = await serverCall("getInitialData");
 
-    if (!response.ok) {
-      throw new Error("Could not connect to server");
-    }
+    members = data.members || [];
 
-    members = await response.json();
+    initializeDates(data.sundays);
 
-    totalMembers.textContent = members.length;
+    await refreshAttendance();
 
-    await loadAttendance();
+    setConnection(true);
 
   } catch (error) {
     console.error(error);
 
+    setConnection(false);
+
     results.innerHTML = `
       <div class="empty">
-        Unable to load members.
-        Please check your API URL and deployment.
+        Could not connect to the attendance database.
+        Please reload the page.
       </div>
     `;
 
-    showToast("Unable to connect to attendance database.");
+    showToast(error.message);
   }
 }
 
 // ========================================
-// 7. LOAD ATTENDANCE FOR SELECTED SUNDAY
+// REFRESH ATTENDANCE
 // ========================================
 
-async function loadAttendance() {
-  results.innerHTML = `
-    <div class="loading">Loading attendance...</div>
-  `;
+async function refreshAttendance() {
+  if (isRefreshing || isSaving) return;
+
+  isRefreshing = true;
 
   try {
-    const response = await fetch(
-      API_URL +
-      "?action=getAttendance&date=" +
-      encodeURIComponent(selectedDate)
+    const data = await serverCall(
+      "getAttendance",
+      selectedDate
     );
 
-    if (!response.ok) {
-      throw new Error("Unable to load attendance");
-    }
+    const nextAttendance = {};
 
-    const data = await response.json();
-
-    attendance = {};
-
-    data.forEach(member => {
-      attendance[member.name.toLowerCase()] =
-        member.present;
+    data.attendance.forEach(member => {
+      nextAttendance[
+        member.name.toLowerCase() + "|" + member.phone
+      ] = member.present;
     });
 
-    updateDashboard();
+    attendance = nextAttendance;
+
+    // Keep the directory synchronized too.
+    const memberData = await serverCall("getInitialData");
+
+    members = memberData.members || [];
+
+    updateSummary(data.summary);
+
     renderMembers();
+
+    lastRefresh = Date.now();
+
+    setConnection(true);
 
   } catch (error) {
     console.error(error);
+    setConnection(false);
 
-    results.innerHTML = `
-      <div class="empty">
-        Could not retrieve attendance for this Sunday.
-      </div>
-    `;
-
-    showToast("Attendance loading failed.");
+  } finally {
+    isRefreshing = false;
   }
 }
 
 // ========================================
-// 8. UPDATE SUMMARY
+// SUMMARY
 // ========================================
 
-function updateDashboard() {
-  const count = Object.values(attendance)
-    .filter(Boolean).length;
+function updateSummary(summary) {
+  $("totalCount").textContent = summary.total;
+  $("presentCount").textContent = summary.present;
+  $("absentCount").textContent = summary.absent;
+  $("percentage").textContent = summary.percentage + "%";
 
-  presentCount.textContent = count;
-  totalMembers.textContent = members.length;
+  $("progressBar").style.width =
+    summary.percentage + "%";
 }
 
 // ========================================
-// 9. SEARCH MEMBERS
+// MEMBER SEARCH
 // ========================================
 
 function renderMembers() {
-  const query = searchInput.value
-    .trim()
-    .toLowerCase();
+  const query = searchInput.value.trim().toLowerCase();
 
   const filtered = members.filter(member =>
     member.name.toLowerCase().includes(query) ||
     member.phone.toLowerCase().includes(query)
   );
 
-  resultCount.textContent =
+  $("resultCount").textContent =
     `${filtered.length} member${filtered.length === 1 ? "" : "s"}`;
 
-  if (filtered.length === 0) {
+  if (!filtered.length) {
     results.innerHTML = `
       <div class="empty">
         No matching members found.
       </div>
     `;
-
     return;
   }
 
   results.innerHTML = filtered.map(member => {
-    const isPresent =
-      Boolean(attendance[member.name.toLowerCase()]);
+    const key =
+      member.name.toLowerCase() + "|" + member.phone;
+
+    const present = Boolean(attendance[key]);
 
     return `
       <div class="member">
 
-        <div class="member-info">
+        <div class="member-left">
 
           <div class="avatar">
             ${escapeHTML(initials(member.name))}
@@ -755,18 +1045,20 @@ function renderMembers() {
             </div>
 
             <div class="member-phone">
-              ${escapeHTML(member.phone || "No phone number")}
+              ${escapeHTML(member.phone)}
             </div>
           </div>
 
         </div>
 
         <button
-          class="status ${isPresent ? "present" : "absent"}"
+          class="status ${present ? "present" : "absent"}"
           data-name="${escapeHTML(member.name)}"
-          data-present="${isPresent}"
+          data-phone="${escapeHTML(member.phone)}"
+          data-present="${present}"
+          ${isSaving ? "disabled" : ""}
         >
-          ${isPresent ? "✓ In Church" : "Not in Church"}
+          ${present ? "✓ In Church" : "Not in Church"}
         </button>
 
       </div>
@@ -775,46 +1067,44 @@ function renderMembers() {
 }
 
 // ========================================
-// 10. UPDATE ATTENDANCE
+// MARK ATTENDANCE
 // ========================================
 
-async function toggleAttendance(name, button) {
-  const key = name.toLowerCase();
+async function toggleAttendance(name, phone, button) {
+  if (isSaving) return;
 
-  const previousStatus = Boolean(attendance[key]);
+  const key = name.toLowerCase() + "|" + phone;
 
-  const newStatus = !previousStatus;
+  const previous = Boolean(attendance[key]);
+
+  const next = !previous;
+
+  isSaving = true;
 
   button.disabled = true;
   button.textContent = "Saving...";
 
   try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-      },
-      body: JSON.stringify({
-        action: "updateAttendance",
-        name: name,
-        date: selectedDate,
-        present: newStatus
-      })
-    });
-
-    const result = await response.json();
+    const result = await serverCall(
+      "updateAttendance",
+      name,
+      phone,
+      selectedDate,
+      next
+    );
 
     if (!result.success) {
-      throw new Error(result.message || "Update failed");
+      throw new Error("Attendance update failed.");
     }
 
-    attendance[key] = newStatus;
+    attendance[key] = next;
 
-    updateDashboard();
     renderMembers();
 
+    await refreshSummaryOnly();
+
     showToast(
-      newStatus
+      next
         ? name + " marked In Church"
         : name + " marked Not in Church"
     );
@@ -822,24 +1112,173 @@ async function toggleAttendance(name, button) {
   } catch (error) {
     console.error(error);
 
-    showToast("Could not save. Please try again.");
+    showToast(error.message);
 
     button.disabled = false;
-    button.textContent = previousStatus
+
+    button.textContent = previous
       ? "✓ In Church"
       : "Not in Church";
+
+  } finally {
+    isSaving = false;
+    renderMembers();
   }
 }
 
 // ========================================
-// 11. EVENTS
+// UPDATE SUMMARY AFTER A CHANGE
+// ========================================
+
+async function refreshSummaryOnly() {
+  const data = await serverCall(
+    "getAttendance",
+    selectedDate
+  );
+
+  updateSummary(data.summary);
+}
+
+// ========================================
+// ADD MEMBER MODAL
+// ========================================
+
+function openModal() {
+  $("modalOverlay").classList.add("show");
+  $("memberName").focus();
+}
+
+function closeModal() {
+  $("modalOverlay").classList.remove("show");
+  $("memberForm").reset();
+}
+
+$("addButton").addEventListener("click", openModal);
+
+$("cancelButton").addEventListener("click", closeModal);
+
+$("modalOverlay").addEventListener("click", event => {
+  if (event.target === $("modalOverlay")) {
+    closeModal();
+  }
+});
+
+// ========================================
+// SAVE NEW MEMBER
+// ========================================
+
+$("memberForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const name = $("memberName").value.trim();
+  const phone = $("memberPhone").value.trim();
+
+  const button = $("saveMemberButton");
+
+  button.disabled = true;
+  button.textContent = "Saving...";
+
+  try {
+    const result = await serverCall(
+      "addMember",
+      name,
+      phone
+    );
+
+    if (!result.success) {
+      throw new Error("Member registration failed.");
+    }
+
+    closeModal();
+
+    await refreshAttendance();
+
+    showToast(name + " added successfully.");
+
+  } catch (error) {
+    console.error(error);
+    showToast(error.message);
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "Save Member";
+  }
+});
+
+// ========================================
+// EXPORT TO EXCEL
+// ========================================
+
+async function exportExcel() {
+  const button = $("exportButton");
+
+  button.disabled = true;
+  button.textContent = "Preparing...";
+
+  try {
+    if (!window.XLSX) {
+      throw new Error("Excel export library did not load.");
+    }
+
+    const data = await serverCall(
+      "getExportData",
+      selectedDate
+    );
+
+    const rows = data.rows.map(member => {
+      const record = {
+        "Full Name": member.name,
+        "Phone Number": member.phone
+      };
+
+      Object.keys(member).forEach(key => {
+        if (key !== "name" && key !== "phone") {
+          record[key] = member[key];
+        }
+      });
+
+      return record;
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+
+    const workbook = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(
+      workbook,
+      worksheet,
+      "Attendance"
+    );
+
+    XLSX.writeFile(
+      workbook,
+      "Church_Attendance_" + selectedDate + ".xlsx"
+    );
+
+    showToast("Excel report downloaded.");
+
+  } catch (error) {
+    console.error(error);
+    showToast(error.message);
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "↓ Export Excel";
+  }
+}
+
+$("exportButton").addEventListener("click", exportExcel);
+
+// ========================================
+// EVENT LISTENERS
 // ========================================
 
 searchInput.addEventListener("input", renderMembers);
 
 dateSelect.addEventListener("change", async () => {
   selectedDate = dateSelect.value;
-  await loadAttendance();
+
+  await refreshAttendance();
 });
 
 results.addEventListener("click", event => {
@@ -847,15 +1286,40 @@ results.addEventListener("click", event => {
 
   if (!button || button.disabled) return;
 
-  toggleAttendance(button.dataset.name, button);
+  toggleAttendance(
+    button.dataset.name,
+    button.dataset.phone,
+    button
+  );
 });
 
 // ========================================
-// 12. INITIALIZE
+// AUTOMATIC SYNCHRONIZATION
 // ========================================
 
-initializeDates();
-loadMembers();
+setInterval(() => {
+  if (
+    !document.hidden &&
+    !isSaving &&
+    !isRefreshing &&
+    Date.now() - lastRefresh >= REFRESH_INTERVAL
+  ) {
+    refreshAttendance();
+  }
+}, REFRESH_INTERVAL);
+
+// Refresh immediately when the user returns to the page.
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) {
+    refreshAttendance();
+  }
+});
+
+// ========================================
+// START APPLICATION
+// ========================================
+
+initializeApp();
 
 </script>
 
