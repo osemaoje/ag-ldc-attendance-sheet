@@ -20,7 +20,9 @@
   --red: #d94848;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -29,7 +31,11 @@ body {
   font-family: Inter, Arial, sans-serif;
 }
 
-button, input, select { font: inherit; }
+button,
+input,
+select {
+  font: inherit;
+}
 
 .topbar {
   background: linear-gradient(120deg, #104c3b, #176b50);
@@ -37,8 +43,16 @@ button, input, select { font: inherit; }
   padding: 25px max(20px, calc((100% - 1200px)/2));
 }
 
-.topbar h1 { margin: 0 0 6px; font-size: 25px; }
-.topbar p { margin: 0; opacity: .8; font-size: 14px; }
+.topbar h1 {
+  margin: 0 0 6px;
+  font-size: 25px;
+}
+
+.topbar p {
+  margin: 0;
+  opacity: .8;
+  font-size: 14px;
+}
 
 .container {
   max-width: 1200px;
@@ -55,14 +69,16 @@ button, input, select { font: inherit; }
   margin-bottom: 20px;
 }
 
-.toolbar-left, .toolbar-right {
+.toolbar-left,
+.toolbar-right {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-select, input {
+select,
+input {
   background: white;
   border: 1px solid var(--border);
   border-radius: 9px;
@@ -71,7 +87,8 @@ select, input {
   min-height: 43px;
 }
 
-select:focus, input:focus {
+select:focus,
+input:focus {
   border-color: var(--green);
 }
 
@@ -85,7 +102,7 @@ button {
 }
 
 button:disabled {
-  opacity: .5;
+  opacity: .65;
   cursor: not-allowed;
 }
 
@@ -182,7 +199,8 @@ table {
   border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
   padding: 15px 20px;
   border-bottom: 1px solid #edf0ee;
   text-align: left;
@@ -247,6 +265,40 @@ tr:last-child td {
   color: #6b7280;
 }
 
+/* =========================================================
+   SPINNER
+========================================================= */
+
+.spinner {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: attendanceSpin .7s linear infinite;
+  vertical-align: -2px;
+  margin-right: 5px;
+}
+
+@keyframes attendanceSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Larger spinner for modal button */
+
+.modal-spinner {
+  width: 14px;
+  height: 14px;
+  border-width: 2px;
+}
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
 .progress {
   width: 100px;
   height: 7px;
@@ -291,6 +343,10 @@ tr:last-child td {
 #message.error {
   background: #a83232;
 }
+
+/* =========================================================
+   MODAL
+========================================================= */
 
 .modal {
   display: none;
@@ -389,7 +445,9 @@ tr:last-child td {
   margin-top: 9px;
 }
 
-/* ATTENDANCE CHOICE */
+/* =========================================================
+   ATTENDANCE CHOICE
+========================================================= */
 
 .attendance-choice {
   margin: 5px 0 15px;
@@ -463,7 +521,8 @@ tr:last-child td {
     padding: 22px 16px;
   }
 
-  th, td {
+  th,
+  td {
     padding: 12px 10px;
   }
 
@@ -515,11 +574,21 @@ tr:last-child td {
 <body>
 
 <header class="topbar">
+
   <h1>Church Attendance</h1>
-  <p>Member attendance management · October – December 2026</p>
+
+  <p>
+    Member attendance management · October – December 2026
+  </p>
+
 </header>
 
+
 <main class="container">
+
+  <!-- =====================================================
+       TOOLBAR
+  ====================================================== -->
 
   <div class="toolbar">
 
@@ -532,6 +601,7 @@ tr:last-child td {
       <select id="dateSelect"></select>
 
     </div>
+
 
     <div class="toolbar-right">
 
@@ -547,36 +617,70 @@ tr:last-child td {
   </div>
 
 
+  <!-- =====================================================
+       STATS
+  ====================================================== -->
+
   <section class="stats">
 
     <div class="stat">
+
       <small>Total Members</small>
-      <h2 id="totalMembers">0</h2>
+
+      <h2 id="totalMembers">
+        0
+      </h2>
+
     </div>
 
+
     <div class="stat">
+
       <small>Present</small>
-      <h2 id="presentCount">0</h2>
+
+      <h2 id="presentCount">
+        0
+      </h2>
+
     </div>
 
+
     <div class="stat">
+
       <small>Absent</small>
-      <h2 id="absentCount">0</h2>
+
+      <h2 id="absentCount">
+        0
+      </h2>
+
     </div>
 
+
     <div class="stat">
+
       <small>Attendance Rate</small>
-      <h2 id="attendanceRate">0%</h2>
+
+      <h2 id="attendanceRate">
+        0%
+      </h2>
+
     </div>
 
   </section>
 
 
+  <!-- =====================================================
+       ATTENDANCE TABLE
+  ====================================================== -->
+
   <section class="panel">
 
     <div class="panel-head">
 
-      <h2>Attendance Register</h2>
+      <h2>
+        Attendance Register
+      </h2>
+
 
       <div class="search-area">
 
@@ -585,6 +689,7 @@ tr:last-child td {
           placeholder="Search name or phone..."
           oninput="renderTable()"
         >
+
 
         <button
           class="add-search-btn"
@@ -605,20 +710,39 @@ tr:last-child td {
         <thead>
 
           <tr>
-            <th>Member</th>
-            <th>Status</th>
-            <th class="hide-mobile">Attendance</th>
-            <th>Action</th>
+
+            <th>
+              Member
+            </th>
+
+            <th>
+              Status
+            </th>
+
+            <th class="hide-mobile">
+              Attendance
+            </th>
+
+            <th>
+              Action
+            </th>
+
           </tr>
 
         </thead>
 
+
         <tbody id="attendanceBody">
 
           <tr>
-            <td colspan="4" class="empty">
+
+            <td
+              colspan="4"
+              class="empty"
+            >
               Loading attendance...
             </td>
+
           </tr>
 
         </tbody>
@@ -629,6 +753,10 @@ tr:last-child td {
 
   </section>
 
+
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
 
   <div class="footer">
 
@@ -643,6 +771,10 @@ tr:last-child td {
 </main>
 
 
+<!-- =====================================================
+     MESSAGE
+===================================================== -->
+
 <div id="message"></div>
 
 
@@ -650,20 +782,35 @@ tr:last-child td {
      ADD MEMBER MODAL
 ===================================================== -->
 
-<div class="modal" id="memberModal">
+<div
+  class="modal"
+  id="memberModal"
+>
 
   <div class="modal-box">
 
-    <h2>Add New Member</h2>
+    <h2>
+      Add New Member
+    </h2>
 
-    <p style="color:var(--muted);font-size:13px;margin-top:-5px">
+
+    <p
+      style="
+        color:var(--muted);
+        font-size:13px;
+        margin-top:-5px
+      "
+    >
       Enter the member's details below.
     </p>
 
 
     <form id="memberForm">
 
-      <label>Full name</label>
+      <label>
+        Full name
+      </label>
+
 
       <input
         id="newName"
@@ -673,7 +820,10 @@ tr:last-child td {
       >
 
 
-      <label>Phone number</label>
+      <label>
+        Phone number
+      </label>
+
 
       <input
         id="newPhone"
@@ -688,9 +838,13 @@ tr:last-child td {
       <div class="attendance-choice">
 
         <div class="attendance-choice-title">
+
           Attendance for
+
           <span id="attendanceDateLabel"></span>
+
         </div>
+
 
         <div class="attendance-options">
 
@@ -731,7 +885,7 @@ tr:last-child td {
       </div>
 
 
-      <!-- DUPLICATE PHONE INFORMATION -->
+      <!-- DUPLICATE PHONE -->
 
       <div
         class="duplicate-box"
@@ -742,15 +896,18 @@ tr:last-child td {
           Existing phone number found
         </div>
 
+
         <div
           class="duplicate-name"
           id="duplicateName"
         ></div>
 
+
         <div
           class="duplicate-phone"
           id="duplicatePhone"
         ></div>
+
 
         <div class="duplicate-actions">
 
@@ -763,6 +920,7 @@ tr:last-child td {
             Mark Existing Member Present
           </button>
 
+
           <button
             type="button"
             class="cancel-existing"
@@ -773,12 +931,17 @@ tr:last-child td {
 
         </div>
 
+
         <div class="duplicate-warning">
+
           This number already exists. You cannot create another member with the same phone number.
+
         </div>
 
       </div>
 
+
+      <!-- MODAL ACTIONS -->
 
       <div class="modal-actions">
 
@@ -789,6 +952,7 @@ tr:last-child td {
         >
           Cancel
         </button>
+
 
         <button
           type="submit"
@@ -809,16 +973,44 @@ tr:last-child td {
 
 <script>
 
-// PASTE YOUR DEPLOYED APPS SCRIPT WEB APP URL HERE.
+/* =========================================================
+   API
+========================================================= */
+
 const API_URL =
   "https://script.google.com/macros/s/AKfycbxIfjwO470CWWSuFWQad69eetvEi6u5ryRazeVw7ll5hjUCjRKmKijpCmwSGND48wfGdQ/exec";
 
 
+/* =========================================================
+   GLOBAL STATE
+========================================================= */
+
 let members = [];
+
 let records = [];
+
 let dates = [];
+
 let selectedDate = "";
+
+/*
+  busy is still used for operations such as adding/exporting.
+
+  Attendance updates use updatingMemberKey instead.
+  This allows every other attendance button to remain usable.
+*/
+
 let busy = false;
+
+/*
+  Stores ONLY the member currently being updated.
+
+  Example:
+  8012345678|john doe
+*/
+
+let updatingMemberKey = null;
+
 let duplicateMember = null;
 
 
@@ -838,14 +1030,17 @@ function jsonp(params) {
         .toString(36)
         .slice(2);
 
+
     const script =
       document.createElement("script");
+
 
     const query =
       new URLSearchParams({
         ...params,
         callback: callbackName
       });
+
 
     const timeout =
       setTimeout(() => {
@@ -877,6 +1072,7 @@ function jsonp(params) {
         cleanup();
 
         resolve(data);
+
       };
 
 
@@ -889,6 +1085,7 @@ function jsonp(params) {
           "Could not connect to attendance server"
         )
       );
+
     };
 
 
@@ -901,6 +1098,7 @@ function jsonp(params) {
     document.body.appendChild(script);
 
   });
+
 }
 
 
@@ -923,10 +1121,14 @@ async function postData(payload) {
 
     body:
       new URLSearchParams({
+
         payload:
           JSON.stringify(payload)
+
       })
+
   });
+
 }
 
 
@@ -947,6 +1149,7 @@ function formatDate(iso) {
       year: "numeric"
     }
   );
+
 }
 
 
@@ -958,34 +1161,43 @@ function normalizePhone(phone) {
 
   return String(phone || "")
     .replace(/\D/g, "");
+
 }
 
-
-/*
-  Search normalization.
-
-  Example:
-
-  08012345678
-  8012345678
-
-  both become:
-
-  8012345678
-*/
 
 function normalizePhoneForSearch(phone) {
 
   let value =
     normalizePhone(phone);
 
+
   if (value.startsWith("0")) {
 
     value =
       value.substring(1);
+
   }
 
+
   return value;
+
+}
+
+
+/* =========================================================
+   MEMBER KEY
+========================================================= */
+
+function memberKey(name, phone) {
+
+  return (
+    normalizePhoneForSearch(phone) +
+    "|" +
+    String(name || "")
+      .trim()
+      .toLowerCase()
+  );
+
 }
 
 
@@ -1003,13 +1215,20 @@ function notify(
       "message"
     );
 
-  box.textContent = message;
+
+  box.textContent =
+    message;
+
 
   box.className =
-    error ? "error" : "";
+    error
+      ? "error"
+      : "";
+
 
   box.style.display =
     "block";
+
 
   setTimeout(() => {
 
@@ -1017,6 +1236,7 @@ function notify(
       "none";
 
   }, 3500);
+
 }
 
 
@@ -1039,11 +1259,13 @@ async function loadInitial() {
       throw new Error(
         result.message
       );
+
     }
 
 
     members =
       result.members;
+
 
     dates =
       result.dates;
@@ -1072,6 +1294,7 @@ async function loadInitial() {
 
       selectedDate =
         dates[0];
+
     }
 
 
@@ -1091,19 +1314,24 @@ async function loadInitial() {
           selectedDate =
             select.value;
 
+
           updateAttendanceDateLabel();
 
+
           await loadAttendance();
+
         }
       );
 
 
       select.dataset.listenerAttached =
         "true";
+
     }
 
 
     updateAttendanceDateLabel();
+
 
     await loadAttendance();
 
@@ -1113,6 +1341,7 @@ async function loadInitial() {
     ).textContent =
       "Connected";
 
+
   } catch (error) {
 
     document.getElementById(
@@ -1120,11 +1349,14 @@ async function loadInitial() {
     ).textContent =
       error.message;
 
+
     notify(
       error.message,
       true
     );
+
   }
+
 }
 
 
@@ -1149,6 +1381,7 @@ async function loadAttendance() {
 
         date:
           selectedDate
+
       });
 
 
@@ -1157,6 +1390,7 @@ async function loadAttendance() {
       throw new Error(
         result.message
       );
+
     }
 
 
@@ -1183,7 +1417,9 @@ async function loadAttendance() {
       "syncStatus"
     ).textContent =
       "Sync error";
+
   }
+
 }
 
 
@@ -1196,13 +1432,16 @@ function updateStats() {
   const total =
     records.length;
 
+
   const present =
     records.filter(
       r => r.present
     ).length;
 
+
   const absent =
     total - present;
+
 
   const rate =
     total
@@ -1234,6 +1473,7 @@ function updateStats() {
     "attendanceRate"
   ).textContent =
     rate + "%";
+
 }
 
 
@@ -1257,21 +1497,6 @@ function renderTable() {
       .trim()
       .toLowerCase();
 
-
-  /*
-    Search phone numbers using
-    normalized values.
-
-    This means:
-
-    08012345678
-
-    and
-
-    8012345678
-
-    will match.
-  */
 
   const normalizedSearchPhone =
     normalizePhoneForSearch(
@@ -1298,6 +1523,7 @@ function renderTable() {
 
       return nameMatch ||
         phoneMatch;
+
     });
 
 
@@ -1312,12 +1538,28 @@ function renderTable() {
     `;
 
     return;
+
   }
 
 
   body.innerHTML =
     filtered
-      .map(r => `
+      .map(r => {
+
+        /*
+          Check whether THIS exact member
+          is currently being updated.
+        */
+
+        const isUpdating =
+          updatingMemberKey ===
+          memberKey(
+            r.name,
+            r.phone
+          );
+
+
+        return `
 
         <tr>
 
@@ -1343,11 +1585,13 @@ function renderTable() {
                   : "absent"
               }"
             >
+
               ${
                 r.present
                   ? "Present"
                   : "Absent"
               }
+
             </span>
 
           </td>
@@ -1378,24 +1622,24 @@ function renderTable() {
                   ? "on"
                   : "off"
               }"
-
               onclick="toggleAttendance(
                 '${escapeJs(r.name)}',
                 '${escapeJs(r.phone)}',
                 ${!r.present}
               )"
-
-              ${
-                busy
-                  ? "disabled"
-                  : ""
-              }
+              ${isUpdating ? "disabled" : ""}
             >
 
               ${
-                r.present
-                  ? "✓ Present"
-                  : "Mark Present"
+                isUpdating
+
+                  ? `<span class="spinner"></span> Updating...`
+
+                  : r.present
+
+                    ? "✓ Present"
+
+                    : "Mark Present"
               }
 
             </button>
@@ -1404,8 +1648,11 @@ function renderTable() {
 
         </tr>
 
-      `)
+      `;
+
+      })
       .join("");
+
 }
 
 
@@ -1427,6 +1674,7 @@ function escapeHtml(value) {
           "'": "&#039;"
         })[char]
     );
+
 }
 
 
@@ -1445,6 +1693,7 @@ function escapeJs(value) {
       /'/g,
       "\\'"
     );
+
 }
 
 
@@ -1458,45 +1707,51 @@ async function toggleAttendance(
   present
 ) {
 
-  if (busy) {
-    return;
-  }
+  /*
+    Prevent clicking the same member twice
+    while the update is still being confirmed.
+  */
 
-
-  busy = true;
-
-
-  const record =
-    records.find(r =>
-      r.name === name &&
-      normalizePhoneForSearch(
-        r.phone
-      ) ===
-      normalizePhoneForSearch(
-        phone
-      )
+  const key =
+    memberKey(
+      name,
+      phone
     );
 
 
-  /*
-    INSTANT WEBSITE UPDATE
+  if (
+    updatingMemberKey
+  ) {
 
-    The UI changes immediately,
-    without waiting for Google Sheets.
-  */
+    return;
 
-  if (record) {
-
-    record.present =
-      present;
-
-    updateStats();
-
-    renderTable();
   }
 
 
+  /*
+    Remember exactly which member
+    is being updated.
+  */
+
+  updatingMemberKey =
+    key;
+
+
+  /*
+    Immediately show spinner.
+    IMPORTANT:
+    We do NOT change the attendance
+    status yet.
+  */
+
+  renderTable();
+
+
   try {
+
+    /*
+      Send update to Apps Script.
+    */
 
     await postData({
 
@@ -1511,45 +1766,236 @@ async function toggleAttendance(
         selectedDate,
 
       present
+
     });
 
 
-    notify(
-      present
-        ? "Marked present"
-        : "Marked absent"
-    );
+    /*
+      POST uses no-cors, so the browser
+      cannot read the response.
+
+      Therefore we repeatedly GET the
+      attendance sheet until Google Sheets
+      confirms the expected value.
+    */
+
+    const updated =
+      await waitForAttendanceUpdate(
+        name,
+        phone,
+        present
+      );
+
+
+    if (!updated) {
+
+      throw new Error(
+        "Attendance update could not be confirmed. Please try again."
+      );
+
+    }
 
 
     /*
-      Give Apps Script a short moment
-      to write to Google Sheets,
-      then immediately sync back.
+      At this point records already
+      contains the confirmed value.
     */
 
-    setTimeout(
-      () => {
-        loadAttendance();
-      },
-      400
+    notify(
+      present
+        ? "✓ Attendance marked present"
+        : "✓ Attendance marked absent"
     );
 
 
   } catch (error) {
 
     notify(
-      "Could not submit attendance",
+      error.message ||
+      "Could not update attendance",
       true
     );
 
+
+    /*
+      Restore the real server state
+      if confirmation failed.
+    */
+
     await loadAttendance();
+
 
   } finally {
 
-    busy = false;
+    /*
+      Remove spinner ONLY after
+      confirmation or failure.
+    */
+
+    updatingMemberKey =
+      null;
+
 
     renderTable();
+
   }
+
+}
+
+
+/* =========================================================
+   WAIT FOR GOOGLE SHEETS CONFIRMATION
+========================================================= */
+
+async function waitForAttendanceUpdate(
+  name,
+  phone,
+  expectedPresent
+) {
+
+  /*
+    Maximum number of confirmation attempts.
+
+    12 attempts × 500ms ≈ 6 seconds,
+    plus network/server response time.
+  */
+
+  const maxAttempts = 12;
+
+  const pollingDelay = 500;
+
+
+  for (
+    let attempt = 0;
+    attempt < maxAttempts;
+    attempt++
+  ) {
+
+    /*
+      If the selected Sunday changes while
+      this request is running, stop.
+    */
+
+    if (!selectedDate) {
+      return false;
+    }
+
+
+    try {
+
+      const result =
+        await jsonp({
+
+          action:
+            "attendance",
+
+          date:
+            selectedDate
+
+        });
+
+
+      if (
+        result &&
+        result.success
+      ) {
+
+        const latestRecords =
+          result.records || [];
+
+
+        const updatedRecord =
+          latestRecords.find(
+            r =>
+              memberKey(
+                r.name,
+                r.phone
+              ) ===
+              memberKey(
+                name,
+                phone
+              )
+          );
+
+
+        /*
+          Only declare success when the
+          server actually reports the
+          expected state.
+        */
+
+        if (
+          updatedRecord &&
+          updatedRecord.present ===
+            expectedPresent
+        ) {
+
+          records =
+            latestRecords;
+
+
+          updateStats();
+
+
+          renderTable();
+
+
+          document.getElementById(
+            "syncStatus"
+          ).textContent =
+            "Updated successfully · " +
+            new Date()
+              .toLocaleTimeString();
+
+
+          return true;
+
+        }
+
+      }
+
+    } catch (error) {
+
+      /*
+        Do nothing here.
+
+        We continue polling because a
+        temporary GET failure should not
+        immediately declare the update failed.
+      */
+
+    }
+
+
+    /*
+      Wait before checking again.
+    */
+
+    if (
+      attempt <
+      maxAttempts - 1
+    ) {
+
+      await new Promise(
+        resolve =>
+          setTimeout(
+            resolve,
+            pollingDelay
+          )
+      );
+
+    }
+
+  }
+
+
+  /*
+    Google Sheets never reported the
+    expected state within the timeout.
+  */
+
+  return false;
+
 }
 
 
@@ -1579,13 +2025,10 @@ function openModal() {
     null;
 
 
-  /*
-    Default new members to Present.
-  */
-
   document.getElementById(
     "newMemberPresent"
-  ).checked = true;
+  ).checked =
+    true;
 
 
   updateAttendanceDateLabel();
@@ -1596,6 +2039,7 @@ function openModal() {
       "newName"
     )
     .focus();
+
 }
 
 
@@ -1624,7 +2068,8 @@ function closeModal() {
     .getElementById(
       "newMemberPresent"
     )
-    .checked = true;
+    .checked =
+    true;
 
 
   document
@@ -1637,6 +2082,7 @@ function closeModal() {
 
   duplicateMember =
     null;
+
 }
 
 
@@ -1651,9 +2097,11 @@ function updateAttendanceDateLabel() {
       "attendanceDateLabel"
     );
 
+
   if (!label) {
     return;
   }
+
 
   if (!selectedDate) {
 
@@ -1661,11 +2109,16 @@ function updateAttendanceDateLabel() {
       "";
 
     return;
+
   }
+
 
   label.textContent =
     "· " +
-    formatDate(selectedDate);
+    formatDate(
+      selectedDate
+    );
+
 }
 
 
@@ -1717,6 +2170,7 @@ document
       ) {
 
         return;
+
       }
 
 
@@ -1725,7 +2179,8 @@ document
           member =>
             normalizePhoneForSearch(
               member.phone
-            ) === typedPhone
+            ) ===
+            typedPhone
         );
 
 
@@ -1754,6 +2209,7 @@ document
 
         saveButton.disabled =
           true;
+
       }
 
     }
@@ -1771,8 +2227,20 @@ async function markExistingMemberPresent() {
   }
 
 
+  if (updatingMemberKey) {
+    return;
+  }
+
+
   const member =
     duplicateMember;
+
+
+  const key =
+    memberKey(
+      member.name,
+      member.phone
+    );
 
 
   const button =
@@ -1781,38 +2249,20 @@ async function markExistingMemberPresent() {
     );
 
 
+  /*
+    Start spinner/loading state.
+  */
+
+  updatingMemberKey =
+    key;
+
+
   button.disabled =
     true;
 
-  button.textContent =
-    "Updating...";
 
-
-  /*
-    Immediately update local UI.
-  */
-
-  const record =
-    records.find(r =>
-      normalizePhoneForSearch(
-        r.phone
-      ) ===
-      normalizePhoneForSearch(
-        member.phone
-      ) &&
-      r.name === member.name
-    );
-
-
-  if (record) {
-
-    record.present =
-      true;
-
-    updateStats();
-
-    renderTable();
-  }
+  button.innerHTML =
+    `<span class="spinner modal-spinner"></span> Updating...`;
 
 
   try {
@@ -1833,8 +2283,35 @@ async function markExistingMemberPresent() {
 
       present:
         true
+
     });
 
+
+    /*
+      Wait until the actual Google Sheet
+      value becomes Y.
+    */
+
+    const updated =
+      await waitForAttendanceUpdate(
+        member.name,
+        member.phone,
+        true
+      );
+
+
+    if (!updated) {
+
+      throw new Error(
+        "Attendance update could not be confirmed. Please try again."
+      );
+
+    }
+
+
+    /*
+      Only close after confirmation.
+    */
 
     closeModal();
 
@@ -1851,33 +2328,36 @@ async function markExistingMemberPresent() {
     );
 
 
-    setTimeout(
-      async () => {
-
-        await loadAttendance();
-
-        renderTable();
-
-      },
-      400
-    );
-
-
   } catch (error) {
 
     notify(
+      error.message ||
       "Could not update attendance",
       true
     );
 
+
+    await loadAttendance();
+
+
   } finally {
+
+    updatingMemberKey =
+      null;
+
 
     button.disabled =
       false;
 
+
     button.textContent =
       "Mark Existing Member Present";
+
+
+    renderTable();
+
   }
+
 }
 
 
@@ -1894,6 +2374,11 @@ document
     async event => {
 
       event.preventDefault();
+
+
+      if (busy) {
+        return;
+      }
 
 
       const name =
@@ -1920,10 +2405,6 @@ document
         );
 
 
-      /*
-        Get Present / Absent choice.
-      */
-
       const present =
         document
           .getElementById(
@@ -1938,17 +2419,13 @@ document
         );
 
 
-      /*
-        Check against currently loaded
-        members before submitting.
-      */
-
       const existing =
         members.find(
           member =>
             normalizePhoneForSearch(
               member.phone
-            ) === normalizedPhone
+            ) ===
+            normalizedPhone
         );
 
 
@@ -1961,14 +2438,20 @@ document
         );
 
         return;
+
       }
+
+
+      busy =
+        true;
 
 
       button.disabled =
         true;
 
-      button.textContent =
-        "Adding...";
+
+      button.innerHTML =
+        `<span class="spinner"></span> Adding...`;
 
 
       try {
@@ -1986,61 +2469,227 @@ document
             selectedDate,
 
           present
+
         });
+
+
+        /*
+          Because POST is no-cors, wait for
+          the new member to appear in the
+          actual GET response.
+        */
+
+        const added =
+          await waitForNewMember(
+            name,
+            phone,
+            present
+          );
+
+
+        if (!added) {
+
+          throw new Error(
+            "Member was added but could not be confirmed yet. Please refresh."
+          );
+
+        }
 
 
         closeModal();
 
 
+        document.getElementById(
+          "search"
+        ).value =
+          phone;
+
+
         notify(
           present
-            ? "Member added as present. Refreshing..."
-            : "Member added as absent. Refreshing..."
-        );
-
-
-        /*
-          Refresh quickly after Apps Script
-          writes the member and attendance.
-        */
-
-        setTimeout(
-          async () => {
-
-            await loadInitial();
-
-
-            document.getElementById(
-              "search"
-            ).value =
-              phone;
-
-
-            renderTable();
-
-          },
-          500
+            ? "✓ Member added as present"
+            : "✓ Member added as absent"
         );
 
 
       } catch (error) {
 
         notify(
-          error.message,
+          error.message ||
+          "Could not add member",
           true
         );
 
+
+        await loadInitial();
+
+
       } finally {
+
+        busy =
+          false;
+
 
         button.disabled =
           false;
 
+
         button.textContent =
           "Add Member";
+
+
+        renderTable();
+
       }
 
     }
   );
+
+
+/* =========================================================
+   WAIT FOR NEW MEMBER CONFIRMATION
+========================================================= */
+
+async function waitForNewMember(
+  name,
+  phone,
+  expectedPresent
+) {
+
+  const maxAttempts =
+    12;
+
+
+  const pollingDelay =
+    500;
+
+
+  for (
+    let attempt = 0;
+    attempt < maxAttempts;
+    attempt++
+  ) {
+
+    try {
+
+      const result =
+        await jsonp({
+
+          action:
+            "initial"
+
+        });
+
+
+      if (
+        result &&
+        result.success
+      ) {
+
+        const found =
+          (result.members || [])
+            .find(
+              member =>
+                memberKey(
+                  member.name,
+                  member.phone
+                ) ===
+                memberKey(
+                  name,
+                  phone
+                )
+            );
+
+
+        if (found) {
+
+          members =
+            result.members;
+
+
+          const attendance =
+            await jsonp({
+
+              action:
+                "attendance",
+
+              date:
+                selectedDate
+
+            });
+
+
+          if (
+            attendance &&
+            attendance.success
+          ) {
+
+            records =
+              attendance.records;
+
+
+            const record =
+              records.find(
+                r =>
+                  memberKey(
+                    r.name,
+                    r.phone
+                  ) ===
+                  memberKey(
+                    name,
+                    phone
+                  )
+              );
+
+
+            if (
+              record &&
+              record.present ===
+                expectedPresent
+            ) {
+
+              updateStats();
+
+              renderTable();
+
+              return true;
+
+            }
+
+          }
+
+        }
+
+      }
+
+    } catch (error) {
+
+      // Continue polling.
+
+    }
+
+
+    if (
+      attempt <
+      maxAttempts - 1
+    ) {
+
+      await new Promise(
+        resolve =>
+          setTimeout(
+            resolve,
+            pollingDelay
+          )
+      );
+
+    }
+
+  }
+
+
+  return false;
+
+}
 
 
 /* =========================================================
@@ -2049,7 +2698,16 @@ document
 
 async function exportExcel() {
 
+  if (busy || updatingMemberKey) {
+    return;
+  }
+
+
   try {
+
+    busy =
+      true;
+
 
     const initial =
       await jsonp({
@@ -2062,6 +2720,7 @@ async function exportExcel() {
       throw new Error(
         initial.message
       );
+
     }
 
 
@@ -2092,8 +2751,11 @@ async function exportExcel() {
     ) {
 
       const row = [
+
         member.name,
+
         member.phone
+
       ];
 
 
@@ -2109,6 +2771,7 @@ async function exportExcel() {
               "attendance",
 
             date
+
           });
 
 
@@ -2128,15 +2791,19 @@ async function exportExcel() {
 
 
         row.push(
+
           found &&
           found.present
             ? "Y"
             : ""
+
         );
+
       }
 
 
       rows.push(row);
+
     }
 
 
@@ -2170,7 +2837,15 @@ async function exportExcel() {
       error.message,
       true
     );
+
+
+  } finally {
+
+    busy =
+      false;
+
   }
+
 }
 
 
@@ -2182,13 +2857,24 @@ async function exportExcel() {
 setInterval(
   () => {
 
+    /*
+      Do not refresh while an attendance
+      update is waiting for confirmation.
+
+      Otherwise the automatic refresh could
+      interfere with the spinner/confirmation
+      flow.
+    */
+
     if (
       !document.hidden &&
       !busy &&
+      !updatingMemberKey &&
       selectedDate
     ) {
 
       loadAttendance();
+
     }
 
   },
