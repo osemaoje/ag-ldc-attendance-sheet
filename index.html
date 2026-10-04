@@ -1395,55 +1395,34 @@ function updateStats() {
 ========================================================= */
 
 function renderTable() {
+  const body = document.getElementById("attendanceBody");
 
-  const body =
-    document.getElementById(
-      "attendanceBody"
-    );
+  const search = document
+    .getElementById("search")
+    .value
+    .trim()
+    .toLowerCase();
 
+  // Normalize only for phone-number comparison
+  const normalizedSearchPhone = normalizePhoneForSearch(search);
 
-  const search =
-    document.getElementById(
-      "search"
-    )
-      .value
-      .trim()
-      .toLowerCase();
+  const filtered = records.filter(r => {
+    const memberName = String(r.name || "").trim().toLowerCase();
 
+    const memberPhone = normalizePhoneForSearch(r.phone);
 
-  const normalizedSearchPhone =
-    normalizePhoneForSearch(
-      search
-    );
+    // Search by full name or part of name
+    const nameMatch = memberName.includes(search);
 
+    // Search by phone number
+    const phoneMatch =
+      normalizedSearchPhone.length > 0 &&
+      memberPhone.includes(normalizedSearchPhone);
 
-  const filtered =
-    records.filter(r => {
-
-      const nameMatch =
-        r.name
-          .toLowerCase()
-          .includes(search);
-
-
-      const phoneMatch =
-        normalizePhoneForSearch(
-          r.phone
-        ).includes(
-          normalizedSearchPhone
-        );
-
-
-      return (
-        nameMatch ||
-        phoneMatch
-      );
-
-    });
-
+    return nameMatch || phoneMatch;
+  });
 
   if (!filtered.length) {
-
     body.innerHTML = `
       <tr>
         <td colspan="4" class="empty">
@@ -1451,129 +1430,59 @@ function renderTable() {
         </td>
       </tr>
     `;
-
     return;
-
   }
 
+  body.innerHTML = filtered.map(r => {
+    const key = memberKey(r.name, r.phone);
+    const isUpdating = updatingMembers.has(key);
 
-  body.innerHTML =
-    filtered
-      .map(r => {
+    return `
+      <tr>
+        <td>
+          <div class="member-name">
+            ${escapeHtml(r.name)}
+          </div>
 
-        /*
-          Determine whether THIS exact
-          member is currently updating.
-        */
+          <div class="phone">
+            ${escapeHtml(r.phone)}
+          </div>
+        </td>
 
-        const key =
-          memberKey(
-            r.name,
-            r.phone
-          );
+        <td>
+          <span class="status ${r.present ? "present" : "absent"}">
+            ${r.present ? "Present" : "Absent"}
+          </span>
+        </td>
 
+        <td class="hide-mobile">
+          <div class="progress">
+            <span style="width:${r.present ? 100 : 0}%"></span>
+          </div>
+        </td>
 
-        const isUpdating =
-          updatingMembers.has(key);
-
-
-        return `
-
-        <tr>
-
-          <td>
-
-            <div class="member-name">
-              ${escapeHtml(r.name)}
-            </div>
-
-            <div class="phone">
-              ${escapeHtml(r.phone)}
-            </div>
-
-          </td>
-
-
-          <td>
-
-            <span
-              class="status ${
-                r.present
-                  ? "present"
-                  : "absent"
-              }"
-            >
-
-              ${
-                r.present
-                  ? "Present"
-                  : "Absent"
-              }
-
-            </span>
-
-          </td>
-
-
-          <td class="hide-mobile">
-
-            <div class="progress">
-
-              <span
-                style="width:${
-                  r.present
-                    ? 100
-                    : 0
-                }%"
-              ></span>
-
-            </div>
-
-          </td>
-
-
-          <td>
-
-            <button
-              class="toggle ${
-                r.present
-                  ? "on"
-                  : "off"
-              }"
-
-              onclick="toggleAttendance(
-                '${escapeJs(r.name)}',
-                '${escapeJs(r.phone)}',
-                ${!r.present}
-              )"
-
-              ${isUpdating ? "disabled" : ""}
-
-            >
-
-              ${
-                isUpdating
-
-                  ? `<span class="spinner"></span> Updating...`
-
-                  : r.present
-
-                    ? "✓ Present"
-
-                    : "Mark Present"
-              }
-
-            </button>
-
-          </td>
-
-        </tr>
-
-        `;
-
-      })
-      .join("");
-
+        <td>
+          <button
+            class="toggle ${r.present ? "on" : "off"}"
+            onclick="toggleAttendance(
+              '${escapeJs(r.name)}',
+              '${escapeJs(r.phone)}',
+              ${!r.present}
+            )"
+            ${isUpdating ? "disabled" : ""}
+          >
+            ${
+              isUpdating
+                ? `<span class="spinner"></span> Updating...`
+                : r.present
+                  ? "✓ Present"
+                  : "Mark Present"
+            }
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join("");
 }
 
 
