@@ -942,6 +942,16 @@ const updatingMembers = new Set();
 
 let duplicateMember = null;
 
+/*
+  Members that have just been added from the
+  dialog but may not be visible on the server
+  yet. They are kept on screen (by normalized
+  phone number) until the server returns them,
+  so the auto-refresh never makes them vanish.
+*/
+
+const pendingMembers = new Map();
+
 
 /* =========================================================
    JSONP
@@ -1222,6 +1232,59 @@ function memberKey(name, phone) {
 
 
 /* =========================================================
+   MERGE PENDING (JUST-ADDED) MEMBERS INTO RECORDS
+
+   Keeps a newly added member visible in the list
+   until the server returns them. Once the server
+   list contains that phone number, the pending
+   entry is dropped automatically.
+========================================================= */
+
+function mergePendingMembers(list) {
+
+  const result =
+    (list || []).slice();
+
+
+  pendingMembers.forEach(
+    (pending, phoneKey) => {
+
+      const exists =
+        result.some(
+          r =>
+            normalizePhoneForSearch(
+              r.phone
+            ) === phoneKey
+        );
+
+
+      if (!exists) {
+
+        result.push({
+
+          name:
+            pending.name,
+
+          phone:
+            pending.phone,
+
+          present:
+            false
+
+        });
+
+      }
+
+    }
+  );
+
+
+  return result;
+
+}
+
+
+/* =========================================================
    NOTIFICATION
 ========================================================= */
 
@@ -1423,7 +1486,9 @@ async function loadAttendance() {
 
 
     records =
-      result.records;
+      mergePendingMembers(
+        result.records
+      );
 
 
     updateStats();
@@ -1886,7 +1951,9 @@ async function waitForAttendanceUpdate(
           ) {
 
             records =
-              latestRecords;
+              mergePendingMembers(
+                latestRecords
+              );
 
             updateStats();
 
@@ -2311,6 +2378,15 @@ async function markExistingMemberPresent() {
 
 /* =========================================================
    ADD NEW MEMBER
+
+   The dialog closes immediately and the new member
+   appears in the list right away. Saving happens in
+   the background:
+
+   - Absent selected  -> member is only added.
+   - Present selected -> member is added, then marked
+     present using the same updateAttendance flow as
+     the "Mark Present" button.
 ========================================================= */
 
 document
@@ -2319,7 +2395,7 @@ document
   )
   .addEventListener(
     "submit",
-    async event => {
+    event => {
 
       event.preventDefault();
 
@@ -2361,12 +2437,6 @@ document
           .checked;
 
 
-      const button =
-        document.getElementById(
-          "saveMemberBtn"
-        );
-
-
       const existing =
         members.find(
           member =>
@@ -2390,116 +2460,250 @@ document
       }
 
 
-      busy =
-        true;
-
-
-      button.disabled =
-        true;
-
-
-      button.innerHTML =
-        `<span class="spinner"></span> Adding...`;
-
-
-      try {
-
-        await postData({
-
-          action:
-            "addMember",
-
+      const key =
+        memberKey(
           name,
-
-          phone,
-
-          date:
-            selectedDate,
-
-          present
-
-        });
+          phone
+        );
 
 
-        const added =
-          await waitForNewMember(
-            name,
-            phone,
-            present
-          );
+      const requestDate =
+        selectedDate;
 
 
-        if (!added) {
+      /*
+        Show the new member immediately.
+      */
 
-          throw new Error(
-            "Member was added but could not be confirmed yet. Please refresh."
-          );
+      members.push({
 
+        name,
+
+        phone
+
+      });
+
+
+      pendingMembers.set(
+        normalizedPhone,
+        {
+          name,
+          phone
         }
+      );
 
+
+      if (present) {
 
         /*
-          The member now exists on the server,
-          so close the dialog immediately.
+          Same spinner as the Mark Present button.
         */
 
-        closeModal();
+        updatingMembers.add(key);
+
+      }
 
 
-        document.getElementById(
-          "search"
-        ).value =
-          phone;
-
-
-        notify(
-          present
-            ? "✓ Member added as present"
-            : "✓ Member added as absent"
+      records =
+        mergePendingMembers(
+          records
         );
 
 
-        /*
-          Refresh the attendance list in the
-          background so the dialog is never
-          held open waiting for it.
-        */
-
-        loadAttendance();
+      closeModal();
 
 
-      } catch (error) {
+      document.getElementById(
+        "search"
+      ).value =
+        phone;
 
-        notify(
-          error.message ||
-          "Could not add member",
+
+      updateStats();
+
+      renderTable();
+
+
+      notify(
+        "Adding member..."
+      );
+
+
+      /*
+        Continue saving in the background.
+      */
+
+      addMemberInBackground(
+        name,
+        phone,
+        present,
+        requestDate
+      );
+
+    }
+  );
+
+
+/* =========================================================
+   ADD MEMBER IN BACKGROUND
+========================================================= */
+
+async function addMemberInBackground(
+  name,
+  phone,
+  present,
+  requestDate
+) {
+
+  const normalizedPhone =
+    normalizePhoneForSearch(
+      phone
+    );
+
+
+  const key =
+    memberKey(
+      name,
+      phone
+    );
+
+
+  try {
+
+    /*
+      Step 1: add the member only.
+    */
+
+    await postData({
+
+      action:
+        "addMember",
+
+      name,
+
+      phone,
+
+      date:
+        requestDate,
+
+      present:
+        false
+
+    });
+
+
+    if (present) {
+
+      /*
+        Step 2 (Present selected):
+        mark the new member present, exactly
+        like the "Mark Present" button does.
+      */
+
+      await postData({
+
+        action:
+          "updateAttendance",
+
+        name,
+
+        phone,
+
+        date:
+          requestDate,
+
+        present:
           true
+
+      });
+
+
+      const marked =
+        await waitForNewMemberPresent(
+          phone,
+          requestDate
         );
 
 
-        await loadInitial();
+      if (!marked) {
+
+        throw new Error(
+          "Member was added but attendance could not be confirmed. Please refresh."
+        );
+
+      }
+
+    } else {
+
+      /*
+        Absent selected: just confirm that
+        the member now exists.
+      */
+
+      const added =
+        await waitForNewMember(
+          name,
+          phone,
+          false
+        );
 
 
-      } finally {
+      if (!added) {
 
-        busy =
-          false;
-
-
-        button.disabled =
-          false;
-
-
-        button.textContent =
-          "Add Member";
-
-
-        renderTable();
+        throw new Error(
+          "Member was added but could not be confirmed yet. Please refresh."
+        );
 
       }
 
     }
+
+
+    notify(
+      present
+        ? "✓ Member added as present"
+        : "✓ Member added as absent"
+    );
+
+
+  } catch (error) {
+
+    notify(
+      error.message ||
+      "Could not add member",
+      true
+    );
+
+
+    pendingMembers.delete(
+      normalizedPhone
+    );
+
+
+    updatingMembers.delete(key);
+
+
+    await loadInitial();
+
+    return;
+
+  }
+
+
+  pendingMembers.delete(
+    normalizedPhone
   );
+
+
+  updatingMembers.delete(key);
+
+
+  renderTable();
+
+
+  loadAttendance();
+
+}
 
 
 /* =========================================================
@@ -2509,7 +2713,7 @@ document
    phone number appears in the members list.
    Phone number is the unique identifier, so we
    do not wait for an exact name/attendance match
-   (which could keep the dialog loading forever
+   (which could keep things loading forever
    if the sheet formats the name differently).
 ========================================================= */
 
@@ -2569,6 +2773,138 @@ async function waitForNewMember(
 
           members =
             result.members;
+
+
+          return true;
+
+        }
+
+      }
+
+
+    } catch (error) {
+
+      /*
+        Continue polling.
+      */
+
+    }
+
+
+    if (
+      attempt <
+      maxAttempts - 1
+    ) {
+
+      await new Promise(
+        resolve =>
+          setTimeout(
+            resolve,
+            pollingDelay
+          )
+      );
+
+    }
+
+  }
+
+
+  return false;
+
+}
+
+
+/* =========================================================
+   WAIT FOR NEW MEMBER TO BE MARKED PRESENT
+
+   Matches by phone number only, so name
+   formatting differences never block it.
+========================================================= */
+
+async function waitForNewMemberPresent(
+  phone,
+  requestDate
+) {
+
+  const maxAttempts =
+    12;
+
+  const pollingDelay =
+    500;
+
+
+  const targetPhone =
+    normalizePhoneForSearch(
+      phone
+    );
+
+
+  for (
+    let attempt = 0;
+    attempt < maxAttempts;
+    attempt++
+  ) {
+
+    try {
+
+      const result =
+        await jsonp({
+
+          action:
+            "attendance",
+
+          date:
+            requestDate
+
+        });
+
+
+      if (
+        result &&
+        result.success
+      ) {
+
+        const latestRecords =
+          result.records || [];
+
+
+        const record =
+          latestRecords.find(
+            r =>
+              normalizePhoneForSearch(
+                r.phone
+              ) ===
+              targetPhone
+          );
+
+
+        if (
+          record &&
+          record.present === true
+        ) {
+
+          if (
+            selectedDate ===
+            requestDate
+          ) {
+
+            records =
+              mergePendingMembers(
+                latestRecords
+              );
+
+            updateStats();
+
+            renderTable();
+
+            document.getElementById(
+              "syncStatus"
+            ).textContent =
+              "Updated successfully · " +
+              new Date()
+                .toLocaleTimeString();
+
+          }
 
 
           return true;
