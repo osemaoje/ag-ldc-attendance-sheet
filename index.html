@@ -905,6 +905,16 @@ let dates = [];
 let selectedDate = "";
 
 /*
+  Tracks whether the user manually picked a Sunday
+  from the dropdown. While this is false, the app
+  keeps the dropdown on the "current" Sunday
+  (today if it is a Sunday in the list, otherwise
+  the most recent previous Sunday in the list).
+*/
+
+let userChangedDate = false;
+
+/*
   busy is ONLY for operations such as:
   - adding a new member
   - exporting Excel
@@ -1072,6 +1082,100 @@ function formatDate(iso) {
 
 
 /* =========================================================
+   TODAY (LOCAL DATE, YYYY-MM-DD)
+========================================================= */
+
+function getTodayISO() {
+
+  const now =
+    new Date();
+
+  const year =
+    now.getFullYear();
+
+  const month =
+    String(
+      now.getMonth() + 1
+    ).padStart(2, "0");
+
+  const day =
+    String(
+      now.getDate()
+    ).padStart(2, "0");
+
+  return (
+    year +
+    "-" +
+    month +
+    "-" +
+    day
+  );
+
+}
+
+
+/* =========================================================
+   DEFAULT SUNDAY
+
+   - If today is one of the Sundays in the dropdown,
+     return today.
+   - Otherwise return the most recent Sunday that is
+     before today.
+   - If today is earlier than every Sunday in the list,
+     fall back to the first Sunday.
+========================================================= */
+
+function getDefaultSunday() {
+
+  if (!dates.length) {
+    return "";
+  }
+
+
+  const today =
+    getTodayISO();
+
+
+  let best =
+    "";
+
+
+  dates.forEach(date => {
+
+    if (
+      date <= today &&
+      (
+        !best ||
+        date > best
+      )
+    ) {
+
+      best =
+        date;
+
+    }
+
+  });
+
+
+  if (best) {
+    return best;
+  }
+
+
+  /*
+    Today is before all listed Sundays,
+    so use the earliest one.
+  */
+
+  return dates
+    .slice()
+    .sort()[0];
+
+}
+
+
+/* =========================================================
    PHONE NORMALIZATION
 ========================================================= */
 
@@ -1198,13 +1302,21 @@ async function loadInitial() {
         .join("");
 
 
+    /*
+      Default to today's Sunday, or the most
+      recent previous Sunday. If the user has
+      already picked a valid date manually,
+      keep their choice.
+    */
+
     if (
       !selectedDate ||
-      !dates.includes(selectedDate)
+      !dates.includes(selectedDate) ||
+      !userChangedDate
     ) {
 
       selectedDate =
-        dates[0];
+        getDefaultSunday();
 
     }
 
@@ -1227,6 +1339,9 @@ async function loadInitial() {
             to continue affecting a newly
             selected date.
           */
+
+          userChangedDate =
+            true;
 
           selectedDate =
             select.value;
@@ -2323,6 +2438,11 @@ document
         }
 
 
+        /*
+          The member now exists on the server,
+          so close the dialog immediately.
+        */
+
         closeModal();
 
 
@@ -2337,6 +2457,15 @@ document
             ? "✓ Member added as present"
             : "✓ Member added as absent"
         );
+
+
+        /*
+          Refresh the attendance list in the
+          background so the dialog is never
+          held open waiting for it.
+        */
+
+        loadAttendance();
 
 
       } catch (error) {
@@ -2375,6 +2504,13 @@ document
 
 /* =========================================================
    WAIT FOR NEW MEMBER CONFIRMATION
+
+   The member is confirmed as soon as their
+   phone number appears in the members list.
+   Phone number is the unique identifier, so we
+   do not wait for an exact name/attendance match
+   (which could keep the dialog loading forever
+   if the sheet formats the name differently).
 ========================================================= */
 
 async function waitForNewMember(
@@ -2390,8 +2526,10 @@ async function waitForNewMember(
     500;
 
 
-  const requestDate =
-    selectedDate;
+  const targetPhone =
+    normalizePhoneForSearch(
+      phone
+    );
 
 
   for (
@@ -2420,14 +2558,10 @@ async function waitForNewMember(
           (result.members || [])
             .find(
               member =>
-                memberKey(
-                  member.name,
+                normalizePhoneForSearch(
                   member.phone
                 ) ===
-                memberKey(
-                  name,
-                  phone
-                )
+                targetPhone
             );
 
 
@@ -2437,56 +2571,7 @@ async function waitForNewMember(
             result.members;
 
 
-          const attendance =
-            await jsonp({
-
-              action:
-                "attendance",
-
-              date:
-                requestDate
-
-            });
-
-
-          if (
-            attendance &&
-            attendance.success
-          ) {
-
-            records =
-              attendance.records;
-
-
-            const record =
-              records.find(
-                r =>
-                  memberKey(
-                    r.name,
-                    r.phone
-                  ) ===
-                  memberKey(
-                    name,
-                    phone
-                  )
-              );
-
-
-            if (
-              record &&
-              record.present ===
-                expectedPresent
-            ) {
-
-              updateStats();
-
-              renderTable();
-
-              return true;
-
-            }
-
-          }
+          return true;
 
         }
 
@@ -2714,6 +2799,41 @@ setInterval(
       Their button will therefore continue
       showing "Updating..." after refresh.
     */
+
+    /*
+      If the user has not manually chosen a
+      Sunday, keep the dropdown on the current
+      Sunday (e.g. the page was left open past
+      midnight into a new Sunday).
+    */
+
+    if (
+      !userChangedDate &&
+      dates.length
+    ) {
+
+      const defaultSunday =
+        getDefaultSunday();
+
+      if (
+        defaultSunday &&
+        defaultSunday !== selectedDate
+      ) {
+
+        selectedDate =
+          defaultSunday;
+
+        document.getElementById(
+          "dateSelect"
+        ).value =
+          selectedDate;
+
+        updateAttendanceDateLabel();
+
+      }
+
+    }
+
 
     if (
       !document.hidden &&
