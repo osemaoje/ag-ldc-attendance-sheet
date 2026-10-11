@@ -2381,12 +2381,11 @@ async function markExistingMemberPresent() {
 
    The dialog closes immediately and the new member
    appears in the list right away. Saving happens in
-   the background:
+   the background in ONE call to the server:
 
+   - Present selected -> member is added and marked
+     present (Y) by the Apps Script.
    - Absent selected  -> member is only added.
-   - Present selected -> member is added, then marked
-     present using the same updateAttendance flow as
-     the "Mark Present" button.
 ========================================================= */
 
 document
@@ -2571,7 +2570,9 @@ async function addMemberInBackground(
   try {
 
     /*
-      Step 1: add the member only.
+      One call: the Apps Script adds the member
+      and marks them present (Y) or leaves them
+      absent, depending on the selection.
     */
 
     await postData({
@@ -2586,37 +2587,12 @@ async function addMemberInBackground(
       date:
         requestDate,
 
-      present:
-        false
+      present
 
     });
 
 
     if (present) {
-
-      /*
-        Step 2 (Present selected):
-        mark the new member present, exactly
-        like the "Mark Present" button does.
-      */
-
-      await postData({
-
-        action:
-          "updateAttendance",
-
-        name,
-
-        phone,
-
-        date:
-          requestDate,
-
-        present:
-          true
-
-      });
-
 
       const marked =
         await waitForNewMemberPresent(
